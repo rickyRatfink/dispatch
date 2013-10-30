@@ -232,7 +232,7 @@ function submit(action) {
 						
                         <h1>Donor Information
                         	<logic:notEmpty name="ticketForm" property="ticket.donationId">
-								&nbsp;<i>(Confirmation #<bean:write name="ticketForm" property="ticket.donationId"/>)</i>
+								&nbsp;<i>(Confirmation #<bean:write name="ticketForm" property="ticket.donationId"/>, Call Date:<bean:write name="ticketForm" property="callDate"/>)</i>
                         	   <a href="javascript:submit('Print');"><img src="<%=request.getContextPath() %>/images/printer.png" height="20" width="20" title="Print Ticket" alt="Print Ticket"/></a>
                         	</logic:notEmpty>
                         </h1>
@@ -467,8 +467,12 @@ function submit(action) {
                             
                             <table width="95%" cellpadding="0" cellspacing="0" border="0">
                             <tr>
-                            	<td width="5" class="fieldHeading" ><html:checkbox property="ticket.specialFlag" value="YES" /></td>
-                                <td class="fieldHeading" >Check if this donation is a special</td>
+                            	<td width="5" class="fieldHeading" >Special</td>
+                                <td class="fieldHeading" >
+                                	<html:select property="ticket.specialFlag" styleClass="ddl" >
+										<html:option value="">Select</html:option>
+										<html:optionsCollection name="dllYesNo" value="value" label="label" />
+									</html:select></td>
                             </tr> 
                          </table>
                         <table width="95%" cellpadding="0" cellspacing="0" border="0">
@@ -628,7 +632,7 @@ function submit(action) {
                                 </td>
                           		<td class="itemName">Television</td>
                                 <td class="itemQuantity"><html:text property="ticket.television" size="2" maxlength="2" styleClass="textbox" onclick="javascript:alert('Please notify the donor that Faith Farm does not accept televisions that are more than 10 years old.  (The year can be located on the serial tag on the back of the televion.)');"/>
-                                    <html:select property="ticket.tableType" styleClass="ddl" >
+                                    <html:select property="ticket.televisionSize" styleClass="ddl" >
 										<html:option value="">Select</html:option>
 										<html:optionsCollection name="dllTvSize" value="value" label="label" />
 									</html:select>

@@ -47,15 +47,14 @@
        
     </action-mappings>
     
-    <message-resources parameter="MessageResources"/>
+     
      
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>
-
-    
+   
+    <message-resources parameter="MessageResources"/>
     
     <!-- ========================= Tiles plugin ===============================-->
-    
-    <!--<message-resources parameter="com/yada180/sms/struts/ApplicationResource"/> 
+    <!--
     This plugin initialize Tiles definition factory. This later can takes some
     parameters explained here after. The plugin first read parameters from
     web.xml, thenoverload them with parameters defined here. All parameters

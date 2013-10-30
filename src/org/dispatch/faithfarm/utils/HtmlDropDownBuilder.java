@@ -160,7 +160,7 @@ public class HtmlDropDownBuilder {
 	        session.setAttribute("dllTableType",tableType);
 	        session.setAttribute("dllChairType",chairType);
 	        session.setAttribute("dllPieces",pieces);	
-	        session.setAttribute("dllCallType",pieces);
+	        session.setAttribute("dllCallType",callType);
 	        session.setAttribute("dllYesNo",yesNo);
 	   }
 	

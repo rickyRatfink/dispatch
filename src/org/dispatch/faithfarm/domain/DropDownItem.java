@@ -10,8 +10,8 @@ public class DropDownItem implements Serializable {
 	private String label;
 	
 	public DropDownItem(String value, String label) {
-		this.value=value;
-		this.label=label;
+		this.value=value.toUpperCase();
+		this.label=label.toUpperCase();
 	}
 	public String getValue() {
 		return value;

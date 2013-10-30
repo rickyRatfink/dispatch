@@ -102,7 +102,7 @@ function whichKey(e) {
 		                <li><a href="<%=request.getContextPath()%>/Dispatch.do?action=New">New Ticket</a></li>
 						<li><a href="<%=request.getContextPath()%>/Dispatch.do?action=Search">View/Edit Ticket</a></li>
 		                <li><a href="<%=request.getContextPath()%>/Dispatch.do?action=Level">Ticket Levels</a></li>
-						<li><a href="<%=request.getContextPath()%>/Dispatch.do?action=calllog">Call Log</a></li>
+						<li><a href="<%=request.getContextPath()%>/Dispatch.do?action=Log">Call Log</a></li>
                         <li><a href="<%=request.getContextPath()%>/Login.do?action=logout">Logout</a></li>
 					</ul> 
                     </logic:equal>
@@ -111,7 +111,7 @@ function whichKey(e) {
 		            	<li><a href="<%=request.getContextPath()%>/Dispatch.do?action=Home">Home</a></li>
 		                <li><a href="<%=request.getContextPath()%>/Dispatch.do?action=New">New Ticket</a></li>
 						<li><a href="<%=request.getContextPath()%>/Dispatch.do?action=Search">View/Edit Ticket</a></li>
-		                <li><a href="<%=request.getContextPath()%>/Dispatch.do?action=calllog">Call Log</a></li>
+		                <li><a href="<%=request.getContextPath()%>/Dispatch.do?action=Log">Call Log</a></li>
 		                <li><a href="<%=request.getContextPath()%>/Login.do?action=logout">Logout</a></li>
 					</ul>
                 	</logic:equal>

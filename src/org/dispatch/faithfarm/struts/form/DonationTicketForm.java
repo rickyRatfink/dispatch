@@ -17,6 +17,7 @@ public class DonationTicketForm  extends ActionForm {
 	private String message;
 	private ArrayList<ErrorMessage>errors=new ArrayList<ErrorMessage>();
 	private List<DonationTicket>results = new ArrayList<DonationTicket>();
+	private List<DonationTicket>printList = new ArrayList<DonationTicket>();
 	private String lastname="lastname";
 	private String firstname="firstname";
 	private String dispatchDate="pickup date";
@@ -25,10 +26,9 @@ public class DonationTicketForm  extends ActionForm {
 	private String confirmation="conf#";
 	private String status;
 	private String farmBase;
-	
 	private String action=null;
 	private String key=null;
-	
+	private String callDate="";
 	
 	public DailyLimit getLimit() {
 		return limit;
@@ -157,5 +157,24 @@ public class DonationTicketForm  extends ActionForm {
 	public void setTicket(DonationTicket ticket) {
 		this.ticket = ticket;
 	}
+
+	public List<DonationTicket> getPrintList() {
+		return printList;
+	}
+
+	public void setPrintList(List<DonationTicket> printList) {
+		this.printList = printList;
+	}
+
+	public String getCallDate() {
+		return callDate;
+	}
+
+	public void setCallDate(String callDate) {
+		this.callDate = callDate;
+	}
+	
+
+	
 	
 }

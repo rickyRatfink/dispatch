@@ -52,9 +52,22 @@ public class DonationTicketAction extends Action {
 			return mapping.findForward(Constants.NEW);
 		}
 		else if ("Print All".equals(((DonationTicketForm) actionForm).getAction())) {
+			DonationTicketForm form = (DonationTicketForm) actionForm;
+			List<DonationTicket> printList = new ArrayList<DonationTicket>();
+			for (java.util.Iterator<DonationTicket> iterator =
+					form.getResults().iterator(); iterator.hasNext();) {
+				    DonationTicket ticket = (DonationTicket) iterator.next();
+				    ticket.setCreationDate(Validator.convertEpoch(ticket.getCreationDate()));
+				    printList.add(ticket);
+			}
+		
+			form.setPrintList(printList);
 			return mapping.findForward(Constants.PRINTALL);
 		}
 		else if ("Print".equals(((DonationTicketForm) actionForm).getAction())) {
+			DonationTicketForm form = (DonationTicketForm) actionForm;
+			String callDate=form.getTicket().getCreationDate();
+			form.getTicket().setCreationDate(Validator.convertEpoch(callDate));
 			return mapping.findForward(Constants.PRINT);
 		}
 		else if ("SaveLevel".equals(((DonationTicketForm) actionForm).getAction())) {
@@ -117,7 +130,6 @@ public class DonationTicketAction extends Action {
 			String dispatchDate=((DonationTicketForm) actionForm).getDispatchDate();
 			String special=((DonationTicketForm) actionForm).getSpecialFlag();
 			String status=((DonationTicketForm) actionForm).getStatus();
-			
 			if ("lastname".equals(lastname)) lastname="";
 			if ("firstname".equals(firstname)) firstname="";
 			if ("conf#".equals(confirmation)) confirmation="";
@@ -126,7 +138,7 @@ public class DonationTicketAction extends Action {
 			if ("status".equals(status)) status="";
 			if ("special".equals(special)) special="";
 			  
-			List list = dao.search(firstname, lastname, confirmation, dispatchDate, zipcode, status, special,null);
+			List list = dao.search(firstname, lastname, confirmation, dispatchDate, zipcode, status, special,user.getFarmBase());
 			((DonationTicketForm) actionForm).setResults(list);
 			
 			return mapping.findForward(Constants.SEARCH);
@@ -171,7 +183,7 @@ public class DonationTicketAction extends Action {
 			SystemUser user = (SystemUser) request.getSession().getAttribute(
 					"USER_" + request.getSession().getId());
 			DonationTicketForm form = (DonationTicketForm) actionForm;
-			boolean ok = this.validate(form);
+			boolean ok = this.validate(form, user);
 
 			if (ok)
 				if (this.saveTicket(form, user, request)) {
@@ -192,6 +204,7 @@ public class DonationTicketAction extends Action {
 			DonationTicket ticket = dao.findById(new Long(((DonationTicketForm) actionForm).getKey()));
 			this.resetForm((DonationTicketForm) actionForm);
 			((DonationTicketForm) actionForm).setTicket(ticket);
+			((DonationTicketForm) actionForm).setCallDate( Validator.convertEpoch(((DonationTicketForm) actionForm).getTicket().getCreationDate()));
 			return mapping.findForward(Constants.NEW);
 
 		}
@@ -221,7 +234,7 @@ public class DonationTicketAction extends Action {
 			if ("status".equals(status)) status="";
 			if ("special".equals(special)) special="";
 			  
-			List list = dao.search(firstname, lastname, confirmation, dispatchDate, zipcode, status, special,null);
+			List list = dao.search(firstname, lastname, confirmation, dispatchDate, zipcode, status, special,user.getFarmBase());
 			((DonationTicketForm) actionForm).setResults(list);
 			return mapping.findForward(Constants.SEARCH);
 		}
@@ -233,7 +246,6 @@ public class DonationTicketAction extends Action {
 			//retrieve existing ticket and copy name/personal info to new ticket
 			DonationTicketDao dao = new DonationTicketDao();
 			DonationTicket ticket = dao.findById( new Long(((DonationTicketForm) actionForm).getKey()) );
-			System.out.println (ticket.getAddressLine1());
 			
 			DonationTicket newTicket = new DonationTicket();
 			newTicket.setFirstname(ticket.getFirstname());
@@ -324,7 +336,7 @@ public class DonationTicketAction extends Action {
 
 	}
 
-	public boolean validate(DonationTicketForm form) {
+	public boolean validate(DonationTicketForm form, SystemUser user) {
 		boolean ok = true;
 
 		ArrayList<ErrorMessage> errors = new ArrayList<ErrorMessage>();
@@ -394,6 +406,11 @@ public class DonationTicketAction extends Action {
 		if (form.getTicket().getDispatchDate() == null
 				|| form.getTicket().getDispatchDate().length() == 0) {
 			errors.add(new ErrorMessage("", "dispatch date is required"));
+			ok = false;
+		}
+		if (form.getTicket().getDispatchDate() != null
+				&& form.getTicket().getDispatchDate().length() != 10) {
+			errors.add(new ErrorMessage("", "dispatch date format needs to be MM/DD/YYYY"));
 			ok = false;
 		}
 		if (form.getTicket().getCallRequirements() == null
@@ -494,7 +511,7 @@ public class DonationTicketAction extends Action {
 		if ( (form.getTicket().getZipcode() != null&& form.getTicket().getZipcode().length() > 0) && 
 					(form.getTicket().getDispatchDate() != null&& form.getTicket().getDispatchDate().length() > 0) ) {
 			
-				String msg = this.validateZipcodeDay(form.getTicket().getZipcode(), form.getTicket().getDispatchDate());
+				String msg = this.validateZipcodeDay(form.getTicket().getZipcode(), form.getTicket().getDispatchDate(),user.getFarmBase(), form.getTicket().getSpecialFlag());
 				if (msg!=null) {
 					errors.add(new ErrorMessage("",msg));
 					ok=false;
@@ -518,7 +535,7 @@ public class DonationTicketAction extends Action {
 			DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 			DateFormat df2 = new SimpleDateFormat("EEEE");
 			int limit = limitDao.search(form.getTicket().getDispatchDate(),form.getTicket().getFarmBase());
-			List list = donationDao.search(null, null, null, form.getTicket().getDispatchDate(), null, null, null, form.getTicket().getFarmBase());
+			List list = donationDao.search(null, null, null, form.getTicket().getDispatchDate(), null, null, null, user.getFarmBase());
 			if (list.size()>=limit) {
 				String msg = "Ticket limit for "+form.getTicket().getDispatchDate()+" has been reached at "+form.getTicket().getFarmBase()+".  Please select another date";
 				if (msg!=null) {
@@ -532,8 +549,11 @@ public class DonationTicketAction extends Action {
 		return ok;
 	}
 	
-	private String validateZipcodeDay(String zipcode, String date) {
+	private String validateZipcodeDay(String zipcode, String date, String farm, String specialFlag ) {
 		String msg=null;
+		
+		if ("YES".equals(specialFlag)&&"Boynton Beach".equals(farm))
+			return null;
 		
 		String[] day = { "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday" };
 		
@@ -555,24 +575,33 @@ public class DonationTicketAction extends Action {
 		cal.setTime(new java.util.Date(date));
 		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 		
-		boolean ok=false;
+		boolean ok=true;
+		if ("Boynton Beach".equals(farm)) {
 		
-		// T TH Sa  Boynton Beach
-		if (dayOfWeek==3||dayOfWeek==5||dayOfWeek==7)
-			for (int a=0;a<zipcodesA.length;a++)
-				if (zipcode.equals(zipcodesA[a]))
-					ok=true;				
-		// M W F   - Boynton Beach
-		if (dayOfWeek==2||dayOfWeek==4||dayOfWeek==5)
-			for (int b=0;b<zipcodesB.length;b++)
-				if (zipcode.equals(zipcodesB[b]))
-					ok=true;				
-		// M W   Fort Lauderdale
-		if (dayOfWeek==2||dayOfWeek==4)
+			ok=false;
+			
+			// T TH Sa  Boynton Beach
+			if (dayOfWeek==3||dayOfWeek==5||dayOfWeek==7)
+				for (int a=0;a<zipcodesA.length;a++)
+					if (zipcode.equals(zipcodesA[a]))
+						ok=true;				
+			// M W F   - Boynton Beach
+			if (dayOfWeek==2||dayOfWeek==4||dayOfWeek==6)
+				for (int b=0;b<zipcodesB.length;b++)
+					if (zipcode.equals(zipcodesB[b]))
+						ok=true;	
+		}
+		
+		if ("Fort Lauderdale".equals(farm)) {
+			ok=true;
+			// W F   Fort Lauderdale only picks up those 2 zipcodes
+			if (dayOfWeek!=4&&dayOfWeek!=6) {
 			for (int c=0;c<zipcodesC.length;c++)
 				if (zipcode.equals(zipcodesC[c]))
-					ok=true;	
-		System.out.println(dayOfWeek);
+					ok=false;
+			}
+		} 
+		
 		if (!ok)
 			msg="Pickups in zipcode "+zipcode+" are not serviced on "+day[dayOfWeek-1];
 		

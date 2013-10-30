@@ -2,7 +2,6 @@
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -67,7 +66,7 @@
 <!-- body -->
 <html:form method="POST" action="/Dispatch.do" styleId="form1"> 
 	
-<logic:iterate id="list" name="ticketForm" property="results" >
+<logic:iterate id="list" name="ticketForm" property="printList" >
 
 <table  width="700" cellpadding="0" cellspacing="0" >
 		<tr>				

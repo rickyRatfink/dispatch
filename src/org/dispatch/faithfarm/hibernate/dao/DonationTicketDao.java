@@ -184,7 +184,7 @@ public class DonationTicketDao {
 			query.append(" and lastname = :lastname ");
 		if (firstname != null && firstname.length() > 0)
 			query.append(" and firstname = :firstname ");
-		if (confirmation != confirmation && confirmation.length() > 0)
+		if (confirmation != null && confirmation.length() > 0)
 			query.append(" and donationId = :donationId ");
 		if (dispatchDate != null && dispatchDate.length() > 0)
 			query.append(" and dispatchDate = :dispatchDate ");
@@ -193,7 +193,7 @@ public class DonationTicketDao {
 		if (status != null && status.length() > 0)
 			query.append(" and status = :status ");
 		if (special != null && special.length() > 0)
-			query.append(" and special = :special ");
+			query.append(" and specialFlag = :specialFlag ");
 		if (farmBase != null && farmBase.length() > 0)
 			query.append(" and farmBase = :farmBase ");
 		query.append(" Order by zipcode");
@@ -219,10 +219,9 @@ public class DonationTicketDao {
 			if (status != null && status.length() > 0)
 				q.setString("status", status);
 			if (special != null && special.length() > 0)
-				q.setString("special", special);
+				q.setString("specialFlag", special);
 			if (farmBase != null && farmBase.length() > 0)
 				q.setString("farmBase", farmBase);
-			
 			list = q.list();
 			session.getTransaction().commit();
 		} catch (Exception e) {
