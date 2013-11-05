@@ -42,7 +42,8 @@
                  <forward name="log" path="/pages/call_log.jsp" redirect="true"/>   
                  <forward name="donors" path="/pages/donors.jsp" redirect="true"/>  
                  <forward name="home" path="/pages/index.jsp" redirect="true"/>    
-                 <forward name="level" path="/pages/ticket_level.jsp" redirect="true"/>      
+                 <forward name="level" path="/pages/ticket_level.jsp" redirect="true"/>  
+                 <forward name="login" path="/pages/security/login.jsp" redirect="true"/>    
         </action>
        
     </action-mappings>

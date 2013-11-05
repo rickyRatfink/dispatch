@@ -176,10 +176,16 @@ public class Validator {
 	}
 	
 	public static String convertEpoch(String epoch) {
+		String fDate="";
+		try {
 		Date ddate = new java.util.Date(new Long(epoch));
 		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		fDate=df.format(ddate);
+		} catch (Exception e) {
+			return epoch;
+		}
 		
-		return df.format(ddate);
+		return fDate;
 
 	}
 	

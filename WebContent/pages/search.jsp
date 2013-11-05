@@ -38,9 +38,23 @@ function submit(action, key) {
 <html:form method="POST" action="/Dispatch.do" styleId="form1"> 
 <tr>
  			<td bgcolor="#ffffff" align="center"><br /><br />
+ 			 <logic:notEmpty name="ticketForm" property="message">
+            		    <table width="800" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                            	<td width="18">
+                            		<img src="<%=request.getContextPath()%>/images/message.png" />
+                            	</td>
+                            	<td class="instructions" align="left">
+                            		<i><bean:write name="ticketForm" property="message" /></i>
+                            	</td>
+                            </tr>
+                        </table>
+                        </br>
+                        </logic:notEmpty>
             <table width="800" cellpadding="0" cellspacing="0" border="0">
 			 <tr>
             	<td align="center" bgcolor="#FFFFFF" >
+            	            
                        <table width="800" cellpadding="0" cellspacing="0" border="0" class="grid">
                         	 <tr>
                             	<td colspan="7" height="25" bgcolor="#3b3f41">&nbsp;&nbsp;Donations&nbsp;<bean:write name="ticketForm" property="farmBase"/></td>
@@ -50,6 +64,9 @@ function submit(action, key) {
                             		</logic:notEmpty>
                             	</td>
                             </tr>   
+                       
+                            
+                            
                             <tr>
                             	<td height="23" valign="center" background="images/searchGroupBk.png" class="searchMenuHeader">
                                 		<html:text property="lastname" size="25" maxlength="20"  styleClass="textboxSearch" onfocus="javascript:this.value='';" onkeyup="ucase(this)"/>

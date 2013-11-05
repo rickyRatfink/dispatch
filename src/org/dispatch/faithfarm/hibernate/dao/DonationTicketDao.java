@@ -196,16 +196,18 @@ public class DonationTicketDao {
 			query.append(" and specialFlag = :specialFlag ");
 		if (farmBase != null && farmBase.length() > 0)
 			query.append(" and farmBase = :farmBase ");
-		query.append(" Order by zipcode");
+		query.append(" Order by zipcode ");
 		
+	
 		
 		Transaction tx = null;
 		List list = null;
 		try {
 			session = HibernateUtil.currentSession();
 			session.beginTransaction();
+		
 			Query q = session.createQuery(query.toString());
-
+			q.setMaxResults(200);
 			if (lastname != null && lastname.length() > 0)
 				q.setString("lastname", lastname);
 			if (firstname != null && firstname.length() > 0)

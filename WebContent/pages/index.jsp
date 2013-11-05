@@ -36,7 +36,9 @@
 							 
 							  String sDate7=(String)session.getAttribute("DATE7");
 							 String sLimit7=(String)session.getAttribute("LIMIT7");
-							 String sCount7=(String)session.getAttribute("COUNT7");                            
+							 String sCount7=(String)session.getAttribute("COUNT7");  
+							 
+							 
 							%>
                             
                            <canvas id="canvas" height="450" width="700">&nbsp;</canvas>
@@ -64,10 +66,10 @@
                             var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Bar(barChartData);
                         
                             </script>
-                            							
+                             							
                         </td>
                     </tr>
-                
+               
              </table>
              </td>
 </tr>

@@ -44,6 +44,12 @@ public class DonationTicketAction extends Action {
 		LOGGER.log(Level.INFO, "In dispatch action...");
 		this.clearMessages(request);
 
+		SystemUser user = (SystemUser) request.getSession().getAttribute(
+				"USER_" + request.getSession().getId());
+		
+		if (user==null)
+			return mapping.findForward(Constants.LOGIN);
+		
 		if ("HOME".equals(((DonationTicketForm) actionForm).getAction())) {
 			this.loadLimits(request);
 			return mapping.findForward(Constants.HOME);
@@ -53,14 +59,14 @@ public class DonationTicketAction extends Action {
 		}
 		else if ("Print All".equals(((DonationTicketForm) actionForm).getAction())) {
 			DonationTicketForm form = (DonationTicketForm) actionForm;
+			
 			List<DonationTicket> printList = new ArrayList<DonationTicket>();
 			for (java.util.Iterator<DonationTicket> iterator =
-					form.getResults().iterator(); iterator.hasNext();) {
-				    DonationTicket ticket = (DonationTicket) iterator.next();
-				    ticket.setCreationDate(Validator.convertEpoch(ticket.getCreationDate()));
-				    printList.add(ticket);
+						form.getResults().iterator(); iterator.hasNext();) {
+					    DonationTicket ticket = (DonationTicket) iterator.next();
+					    ticket.setCreationDate(Validator.convertEpoch(ticket.getCreationDate()));
+					    printList.add(ticket);
 			}
-		
 			form.setPrintList(printList);
 			return mapping.findForward(Constants.PRINTALL);
 		}
@@ -71,8 +77,6 @@ public class DonationTicketAction extends Action {
 			return mapping.findForward(Constants.PRINT);
 		}
 		else if ("SaveLevel".equals(((DonationTicketForm) actionForm).getAction())) {
-			SystemUser user = (SystemUser) request.getSession().getAttribute(
-					"USER_" + request.getSession().getId());
 			DonationTicketForm form = (DonationTicketForm) actionForm;
 			DailyLimitDao dao = new DailyLimitDao();
 			form.getLimit().setFarmBase(user.getFarmBase());
@@ -82,16 +86,12 @@ public class DonationTicketAction extends Action {
 			return mapping.findForward(Constants.HOME);
 		}
 		else if ("Level".equals(((DonationTicketForm) actionForm).getAction())) {
-			SystemUser user = (SystemUser) request.getSession().getAttribute(
-					"USER_" + request.getSession().getId());
 			DonationTicketForm form = (DonationTicketForm) actionForm;
 			form.setLimit(new DailyLimit());
 			
 			return mapping.findForward(Constants.LEVEL);
 		}
 		else if ("New".equals(((DonationTicketForm) actionForm).getAction())) {
-			SystemUser user = (SystemUser) request.getSession().getAttribute(
-					"USER_" + request.getSession().getId());
 			DonationTicketForm form = (DonationTicketForm) actionForm;
 			form.setErrors(new ArrayList<ErrorMessage>());
 			form.setTicket(new DonationTicket());
@@ -101,8 +101,6 @@ public class DonationTicketAction extends Action {
 		else if ("Search".equals(((DonationTicketForm) actionForm)
 				.getAction())) {
 			DonationTicketDao dao = new DonationTicketDao();
-			SystemUser user = (SystemUser) request.getSession().getAttribute(
-					"USER_" + request.getSession().getId());
 			String dispatchDate=((DonationTicketForm) actionForm).getDispatchDate();
 			if ("pickup date".equals(dispatchDate)) dispatchDate="";
 			if ("".equals(dispatchDate)) {
@@ -114,12 +112,14 @@ public class DonationTicketAction extends Action {
 			List list = dao.search(null, null, null, dispatchDate, null, null, null, user.getFarmBase());
 			((DonationTicketForm) actionForm).setResults(list);
 
+			if (list.size()>199) 
+				((DonationTicketForm) actionForm).setMessage("More than 200 results were returned. Please narrow your search.");
+			
+			
 			return mapping.findForward(Constants.SEARCH);
 		}
 		else if ("SearchTickets".equals(((DonationTicketForm) actionForm)
 				.getAction())) {
-			SystemUser user = (SystemUser) request.getSession().getAttribute(
-					"USER_" + request.getSession().getId());
 			((DonationTicketForm) actionForm).setFarmBase(user.getFarmBase());
 			DonationTicketDao dao = new DonationTicketDao();
 			
@@ -141,6 +141,9 @@ public class DonationTicketAction extends Action {
 			List list = dao.search(firstname, lastname, confirmation, dispatchDate, zipcode, status, special,user.getFarmBase());
 			((DonationTicketForm) actionForm).setResults(list);
 			
+			if (list.size()>199) 
+				((DonationTicketForm) actionForm).setMessage("More than 200 results were returned. Please narrow your search.");
+
 			return mapping.findForward(Constants.SEARCH);
 		} 
 		else if ("SearchDonor".equals(((DonationTicketForm) actionForm)
@@ -161,8 +164,6 @@ public class DonationTicketAction extends Action {
 				.getAction())) {
 			boolean ok = false;
 			CallLogDao dao = new CallLogDao();
-			SystemUser user = (SystemUser) request.getSession().getAttribute(
-					"USER_" + request.getSession().getId());
 			DonationTicketForm form = (DonationTicketForm) actionForm;
 			if (this.saveCallLog(form, user, request)) {
 				this.resetForm(form);
@@ -180,9 +181,8 @@ public class DonationTicketAction extends Action {
 		} 
 		else if ("Save Ticket".equals(((DonationTicketForm) actionForm)
 				.getAction())) {
-			SystemUser user = (SystemUser) request.getSession().getAttribute(
-					"USER_" + request.getSession().getId());
 			DonationTicketForm form = (DonationTicketForm) actionForm;
+			form.setFarmBase(user.getFarmBase());
 			boolean ok = this.validate(form, user);
 
 			if (ok)
@@ -197,9 +197,6 @@ public class DonationTicketAction extends Action {
 		else if ("Update".equals(((DonationTicketForm) actionForm)
 				.getAction())) {
 			
-			SystemUser user = (SystemUser) request.getSession().getAttribute(
-					"USER_" + request.getSession().getId());
-			
 			DonationTicketDao dao = new DonationTicketDao();
 			DonationTicket ticket = dao.findById(new Long(((DonationTicketForm) actionForm).getKey()));
 			this.resetForm((DonationTicketForm) actionForm);
@@ -211,8 +208,6 @@ public class DonationTicketAction extends Action {
 		else if ("Delete".equals(((DonationTicketForm) actionForm)
 				.getAction())) {
 			
-			SystemUser user = (SystemUser) request.getSession().getAttribute(
-					"USER_" + request.getSession().getId());
 			
 			//delete and reload
 			DonationTicketDao dao = new DonationTicketDao();
@@ -240,8 +235,6 @@ public class DonationTicketAction extends Action {
 		}
 		else if ("ExistingDonor".equals(((DonationTicketForm) actionForm)
 				.getAction())) {
-			SystemUser user = (SystemUser) request.getSession().getAttribute(
-					"USER_" + request.getSession().getId());
 			
 			//retrieve existing ticket and copy name/personal info to new ticket
 			DonationTicketDao dao = new DonationTicketDao();
@@ -534,10 +527,15 @@ public class DonationTicketAction extends Action {
 			Date now = calendar.getTime(); 
 			DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 			DateFormat df2 = new SimpleDateFormat("EEEE");
-			int limit = limitDao.search(form.getTicket().getDispatchDate(),form.getTicket().getFarmBase());
+			int limit = limitDao.search(form.getTicket().getDispatchDate(),user.getFarmBase());
+			
+			//default to 65 if limit hasn't been set
+			if (limit==0)
+				limit=65;
+				
 			List list = donationDao.search(null, null, null, form.getTicket().getDispatchDate(), null, null, null, user.getFarmBase());
 			if (list.size()>=limit) {
-				String msg = "Ticket limit for "+form.getTicket().getDispatchDate()+" has been reached at "+form.getTicket().getFarmBase()+".  Please select another date";
+				String msg = "Ticket limit for "+form.getTicket().getDispatchDate()+" has been reached at "+user.getFarmBase()+".  Please select another date";
 				if (msg!=null) {
 					errors.add(new ErrorMessage("",msg));
 					ok=false;
@@ -637,6 +635,7 @@ public class DonationTicketAction extends Action {
 		SystemUser user = (SystemUser) request.getSession().getAttribute(
 				"USER_" + request.getSession().getId());
 	
+		
 		GregorianCalendar calendar = new GregorianCalendar();
 		
 		DailyLimitDao limitDao = new DailyLimitDao();
@@ -662,7 +661,7 @@ public class DonationTicketAction extends Action {
 			limit = limitDao.search(formattedDate, user.getFarmBase());
 			list = donationDao.search(null, null, null, formattedDate, null, null, null, user.getFarmBase());
 			count = list.size();
-			
+	
 			request.getSession().setAttribute("LIMIT"+(day+1), limit+"");
 			request.getSession().setAttribute("COUNT"+(day+1), count+"");
 			request.getSession().setAttribute("DATE"+(day+1), sDay.substring(0,3)+" "+formattedDate);
