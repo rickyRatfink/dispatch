@@ -62,10 +62,10 @@ public class LoginAction extends Action {
 			 
 			 if (user!=null) {
 				 if ("Dispatch".equals(user.getGroup())) {
-					 html.refresh(session);
 					 loginForm.setSystemUser(user);
 					 session.setAttribute("USER_"+session.getId(), user);
-					 
+					 html.refresh(session);
+						
 					 return mapping.findForward(Constants.SUCCESS);
 				 } else {
 					 loginForm.setErrorMessage("Access denied. This user is not authorized to view this application.");
