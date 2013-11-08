@@ -8,11 +8,15 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionForm;
 import org.dispatch.faithfarm.domain.DropDownItem;
+import org.dispatch.faithfarm.domain.SystemUser;
 
 public class HtmlDropDownBuilder {
 
 	public void refresh(HttpSession session) {
 	   
+		SystemUser user = (SystemUser) session.getAttribute(
+				"USER_" + session.getId());
+		
 		
 		List<DropDownItem> rosterStatus = new ArrayList<DropDownItem>();
 		  
@@ -29,7 +33,8 @@ public class HtmlDropDownBuilder {
 	        List<DropDownItem> callReq = new ArrayList<DropDownItem>();
 	        callReq.add(new DropDownItem("tag(donation only)","tag(donation only)"));
 	        callReq.add(new DropDownItem("half-hour call","half-hour call"));
-	        callReq.add(new DropDownItem("one hour call","one hour call"));
+	        if (user!=null&&user.getFarmBase().equals("Fort Lauderdale"))
+	        	callReq.add(new DropDownItem("one hour call","one hour call"));
 	        
 	        List<DropDownItem> location = new ArrayList<DropDownItem>();
 	        location.add(new DropDownItem("inside","inside"));
