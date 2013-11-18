@@ -238,6 +238,44 @@ public class DonationTicketDao {
 		}
 		return list;
 	}
+	
+	
+	public List reportSearch(String farmBase ) {
+
+		StringBuffer query = new StringBuffer("from DonationTicket where 1=1 ");
+		long donationId=0;
+		
+		if (farmBase != null && farmBase.length() > 0)
+			query.append(" and farmBase = :farmBase ");
+		query.append(" Order by callDate ");
+		
+	
+		
+		Transaction tx = null;
+		List list = null;
+		try {
+			session = HibernateUtil.currentSession();
+			session.beginTransaction();
+		
+			Query q = session.createQuery(query.toString());
+			q.setMaxResults(200);
+			
+			if (farmBase != null && farmBase.length() > 0)
+				q.setString("farmBase", farmBase);
+			list = q.list();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			if (session != null) {
+				session.getTransaction().rollback();
+			}
+			e.printStackTrace();
+		}
+		finally {
+			//session.flush();
+			session.clear();
+		}
+		return list;
+	}
 
 
 }

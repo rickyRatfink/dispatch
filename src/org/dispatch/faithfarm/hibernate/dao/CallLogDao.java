@@ -101,6 +101,38 @@ public class CallLogDao {
 		}
 		return list;
 	}
+	
+	public List search(String farmBase) {
+		LOGGER.setLevel(Level.INFO);
+		List<CallLog> list = new ArrayList<CallLog>();
+		Session session = null;
+		CallLog user = null;
+		StringBuffer query = new StringBuffer("from CallLog where 1=1 ");
+		if (farmBase != null && farmBase.length() > 0)
+			query.append(" and farmBase = :farmBase or callAgent =:farmBase");
+		query.append(" Order by callDate ");
+		
+		try {
+			session = HibernateUtil.currentSession();
+			session.beginTransaction();
+			Query q = session.createQuery(query.toString());
+			if (farmBase != null && farmBase.length() > 0)
+				q.setString("farmBase", farmBase);
+			list = q.list();
+			session.getTransaction().commit();
+		}  catch (Exception e) {
+			if (session != null) {
+				session.getTransaction().rollback();
+			}
+			e.printStackTrace();
+		}
+		finally {
+			//session.flush();
+			session.clear();
+		}
+		return list;
+	}
+
 
 	/* Method to INSERT CallLog */
 	public Long addCallLog(CallLog obj) {
