@@ -22,13 +22,15 @@ public class HtmlDropDownBuilder {
 		  
 		List<DropDownItem> status = new ArrayList<DropDownItem>();
 	        status.add(new DropDownItem("Pending","Pending"));
-	        status.add(new DropDownItem("Assigned","Assigned"));
 	        status.add(new DropDownItem("Cancelled by Donor","Cancelled by Donor"));
-	        status.add(new DropDownItem("Completed","Completed"));
-	        status.add(new DropDownItem("In Route","In Route"));
-	        status.add(new DropDownItem("No Response","No Response"));
-	        status.add(new DropDownItem("Reschedule","Reschedule"));
-	        status.add(new DropDownItem("10/5","10/5"));
+	        if (user!=null&&user.getFarmBase().equals("Fort Lauderdale")) { 
+	        	status.add(new DropDownItem("Assigned","Assigned"));
+	        	status.add(new DropDownItem("Completed","Completed"));
+		        status.add(new DropDownItem("In Route","In Route"));
+		        status.add(new DropDownItem("No Response","No Response"));
+		        status.add(new DropDownItem("Reschedule","Reschedule"));
+		        status.add(new DropDownItem("10/5","10/5"));
+		    }
 	        
 	        List<DropDownItem> callReq = new ArrayList<DropDownItem>();
 	        callReq.add(new DropDownItem("tag(donation only)","tag(donation only)"));
