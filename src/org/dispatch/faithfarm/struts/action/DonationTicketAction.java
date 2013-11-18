@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -644,8 +645,9 @@ public class DonationTicketAction extends Action {
 		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		DateFormat df2 = new SimpleDateFormat("EEEE");
 		int limit = limitDao.search(df.format(now), user.getFarmBase());
-		List list = donationDao.search(null, null, null, df.format(now), null, null, null, user.getFarmBase());
-		int count = list.size();
+		List list1 = donationDao.search(null, null, null, df.format(now), null, "Reschedule", null, user.getFarmBase());
+		List list2 = donationDao.search(null, null, null,  df.format(now), null, "Pending", null, user.getFarmBase());
+		int count = list1.size()+list2.size();
 		
 		request.getSession().setAttribute("LIMIT1", limit+"");
 		request.getSession().setAttribute("COUNT1", count+"");
@@ -659,9 +661,10 @@ public class DonationTicketAction extends Action {
 			String sDay = df2.format(tomorrow);
 			
 			limit = limitDao.search(formattedDate, user.getFarmBase());
-			list = donationDao.search(null, null, null, formattedDate, null, null, null, user.getFarmBase());
-			count = list.size();
-	
+			list1 = donationDao.search(null, null, null, formattedDate, null, "Reschedule", null, user.getFarmBase());
+			list2 = donationDao.search(null, null, null,  formattedDate, null, "Pending", null, user.getFarmBase());
+			count = list1.size()+list2.size();
+
 			request.getSession().setAttribute("LIMIT"+(day+1), limit+"");
 			request.getSession().setAttribute("COUNT"+(day+1), count+"");
 			request.getSession().setAttribute("DATE"+(day+1), sDay.substring(0,3)+" "+formattedDate);
