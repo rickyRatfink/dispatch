@@ -82,7 +82,8 @@
 					DISPATCH DATE: <bean:write name="list" property="dispatchDate" /><br/>
 					CALL REQUIREMENTS:<b><bean:write name="list" property="callRequirements" /></b><br/>
 					CALL DATE:<bean:write name="list" property="creationDate" /></br>
-					CALL AGENT:<bean:write name="list" property="createdBy" /></br>					
+					CALL AGENT:<bean:write name="list" property="createdBy" /></br>		
+					SPECIAL:<bean:write name="list" property="specialFlag" /></br>			
 					<br/>
 				</td>
 		</tr>

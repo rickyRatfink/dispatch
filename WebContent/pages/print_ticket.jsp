@@ -81,7 +81,8 @@
 					DISPATCH DATE: <bean:write name="ticketForm" property="ticket.dispatchDate" /><br/>
 					CALL REQUIREMENTS:<b><bean:write name="ticketForm" property="ticket.callRequirements" /></b><br/>
 					CALL DATE:<bean:write name="ticketForm" property="ticket.creationDate" /></br>
-					CALL AGENT:<bean:write name="ticketForm" property="ticket.createdBy" /></br>					
+					CALL AGENT:<bean:write name="ticketForm" property="ticket.createdBy" /></br>
+					SPECIAL:<bean:write name="ticketForm" property="ticket.specialFlag" /></br>					
 					<br/>
 				</td>
 		</tr>
