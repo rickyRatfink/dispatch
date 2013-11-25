@@ -289,17 +289,12 @@
 <table  width="700" border="0" cellpadding="0" cellspacing="0">
 <tr>
 	<td class="receiptFooter">
-    	<input type="checkbox" name="acceptTermsPolicies" checked/>
-        <i>I acknowledge that I have read Faith Farm's delivery/donation terms and policies to the customer.</i>
+    	<br/>
 		<br/>
-		<br/>
-		<b>IMPORTANT PLEASE READ</b><br/>
-		This slip will serve as your receipt in case you wish to use your contribution for purposes of<br/>
-		Income Tax reduction. The Internal Revenue Department informs us that the contributor can estimate<br/>
-		the fair market value of his/her contribution.  No goods or services were received in exchange for this<br/>
-		donation.
+		Thank you for donating today! Your donation affords FFM a way to provide services in the community
+		that bring the light of Christ into the lives of those less fortunate who have fallen victim to
+		addiction and may otherwise not know the gift of Hope!
 		<br/><br/></br>
-		<b>A WORK IN YOUR COMMUNITY BRINGING THE LIGHT OF CHRIST TO THOSE IN MORE NEED THAN OURSELVES</B>
 	</td>	
 </tr>
 </table>
