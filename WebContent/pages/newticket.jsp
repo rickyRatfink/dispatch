@@ -467,7 +467,7 @@ function submit(action) {
                             
                             <table width="95%" cellpadding="0" cellspacing="0" border="0">
                             <tr>
-                            	<td width="5" class="fieldHeading" >Special</td>
+                            	<td width="5" class="fieldHeading" >Special<%=required%</td>
                                 <td class="fieldHeading" >
                                 	<html:select property="ticket.specialFlag" styleClass="ddl" >
 										<html:option value="">Select</html:option>
