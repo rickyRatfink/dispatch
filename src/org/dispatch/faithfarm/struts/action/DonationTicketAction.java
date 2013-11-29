@@ -41,7 +41,7 @@ public class DonationTicketAction extends Action {
 	public ActionForward execute(ActionMapping mapping, ActionForm actionForm,
 			HttpServletRequest request, HttpServletResponse response) {
 
-		LOGGER.setLevel(Level.INFO);
+		LOGGER.setLevel(Level.SEVERE);
 		LOGGER.log(Level.INFO, "In dispatch action...");
 		this.clearMessages(request);
 
@@ -407,6 +407,13 @@ public class DonationTicketAction extends Action {
 			errors.add(new ErrorMessage("", "dispatch date format needs to be MM/DD/YYYY"));
 			ok = false;
 		}
+		
+		if (form.getTicket().getSpecialFlag() != null
+				&& form.getTicket().getSpecialFlag().length() == 0) {
+			errors.add(new ErrorMessage("", "special designation is required"));
+			ok = false;
+		}
+		
 		if (form.getTicket().getCallRequirements() == null
 				|| form.getTicket().getCallRequirements().length() == 0) {
 			errors.add(new ErrorMessage("", "call requirements is required"));
