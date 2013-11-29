@@ -57,7 +57,7 @@
      	line-height: 1.00;
      } .receiptFooter {
      	font-family: sans-serif;
-     	font-size: 9px;
+     	font-size: 12px;
      	font-weight: normal;
      	line-height: 1.00;
 </STYLE>
@@ -290,8 +290,7 @@
 <table  width="700" border="0" cellpadding="0" cellspacing="0">
 <tr>
 	<td class="receiptFooter">
-    	<input type="checkbox" name="acceptTermsPolicies" checked/>
-        Thank you for donating today! Your donation affords FFM a way to provide services in the community
+    	Thank you for donating today! Your donation affords FFM a way to provide services in the community
 		that bring the light of Christ into the lives of those less fortunate who have fallen victim to
 		addiction and may otherwise not know the gift of Hope!
 		<br/><br/></br>

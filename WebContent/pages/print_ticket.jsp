@@ -57,7 +57,7 @@
      	line-height: 1.00;
      } .receiptFooter {
      	font-family: sans-serif;
-     	font-size: 9px;
+     	font-size: 12px;
      	font-weight: normal;
      	line-height: 1.00;
 </STYLE>
