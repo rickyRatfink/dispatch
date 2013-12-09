@@ -26,8 +26,8 @@
         <property name="userRole" type="string">
             <column name="USER_ROLE" length="40" not-null="true" />
         </property>
-        <property name="group" type="string">
-            <column name="GROUP" length="20" not-null="true" />
+        <property name="group_" type="string">
+            <column name="GROUP_" length="20" not-null="true" />
         </property>
         <property name="farmBase" type="string">
             <column name="FARM_BASE" length="25" />
