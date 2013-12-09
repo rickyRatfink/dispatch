@@ -21,7 +21,7 @@ public class SystemUser implements java.io.Serializable {
 	private String firstName;
 	private String lastName;
 	private String lastUpdatedBy;
-	private String group;
+	private String group_;
 
 	public SystemUser() {
 	}
@@ -50,7 +50,7 @@ public class SystemUser implements java.io.Serializable {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.lastUpdatedBy = lastUpdatedBy;
-		this.group = group;
+		this.group_ = group_;
 	}
 
 	public Long getUserId() {
@@ -165,12 +165,14 @@ public class SystemUser implements java.io.Serializable {
 		this.lastUpdatedBy = lastUpdatedBy;
 	}
 
-	public String getGroup() {
-		return this.group;
+	public String getGroup_() {
+		return group_;
 	}
 
-	public void setGroup(String group) {
-		this.group = group;
+	public void setGroup_(String group_) {
+		this.group_ = group_;
 	}
+
+
 
 }
