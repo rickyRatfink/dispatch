@@ -30,7 +30,7 @@ public class LoginAction extends Action {
 	private final static HtmlDropDownBuilder html = new HtmlDropDownBuilder();
 	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {		
-		LOGGER.setLevel(Level.INFO);
+		LOGGER.setLevel(Level.SEVERE);
 
 		 HttpSession session = request.getSession(true);
 		 String action = request.getParameter("action");
@@ -61,7 +61,7 @@ public class LoginAction extends Action {
 			 user = userDao.authenticate(loginForm.getUsername(), loginForm.getPassword());
 			 
 			 if (user!=null) {
-				 if ("Dispatch".equals(user.getGroup())) {
+				 if ("Dispatch".equals(user.getGroup_())) {
 					 loginForm.setSystemUser(user);
 					 session.setAttribute("USER_"+session.getId(), user);
 					 html.refresh(session);
