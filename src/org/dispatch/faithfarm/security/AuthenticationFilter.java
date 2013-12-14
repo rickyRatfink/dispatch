@@ -23,26 +23,33 @@ public class AuthenticationFilter implements Filter {
 	public void doFilter(ServletRequest req, ServletResponse res,
 			FilterChain chain) throws IOException, ServletException {
 		
-		LOGGER.setLevel(Level.INFO);
+		LOGGER.setLevel(Level.SEVERE);
 		
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 		String url = request.getServletPath();
 		String contextPath = request.getContextPath();
 
-		LOGGER.log(Level.INFO,"CHECKING IF USER IS AUTHENTICATED");
-
-		HttpSession session = request.getSession(false);
-		if (null == session) {
-			response.sendRedirect(contextPath + "/pages/security/login.jsp");
-		} else {
-			SystemUser user = (SystemUser) session.getAttribute("USER_"+session.getId());
-			if (user == null ) {
-				response.sendRedirect(contextPath + "/pages/security/login_error.jsp");
-			} else
-				chain.doFilter(request, response);
-
+		String ip=request.getRemoteAddr().toString();
+		if (!"75.147.217.62".equals(ip) && //Boynton Beach Farm
+				!"70.89.102.41".equals(ip) && //FTL Farm
+				!"127.0.0.1".equals(ip)  ) {
+			LOGGER.log(Level.SEVERE,"INVALID IP ADDRESS TRIED TO ACCESS THE SYSTEM: "+request.getRemoteAddr().toString());
+			response.sendRedirect(contextPath + "/denied.html");
 		}
+		else {	
+			HttpSession session = request.getSession(false);
+			if (null == session) {
+				response.sendRedirect(contextPath + "/pages/security/login.jsp");
+			} else {
+				SystemUser user = (SystemUser) session.getAttribute("USER_"+session.getId());
+				if (user == null ) {
+					response.sendRedirect(contextPath + "/pages/security/login_error.jsp");
+				} else
+					chain.doFilter(request, response);
+	
+			}
+		}//end else
 	}
 
 	public void init(FilterConfig config) throws ServletException {

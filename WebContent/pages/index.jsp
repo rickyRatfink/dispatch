@@ -1,10 +1,10 @@
-<jsp:include page="includes/header.jsp" flush="true"/>
+<jsp:include page="includes/christmas_header.jsp" flush="true"/>
  
 <tr>
  			<td bgcolor="#ffffff" align="center"><br /><br />
             <table width="800" cellpadding="0" cellspacing="0" border="0">
                     <tr>
-                        <td align="center" class="barChartHeader">Donation Dispatch Statistics For The Next 7 Days</td>
+                        <td align="center" >Donation Dispatch Statistics For The Next 7 Days</td>
                     </tr>
                     <tr> 
                         <td align="center">

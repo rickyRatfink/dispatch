@@ -20,5 +20,6 @@ public final class Constants {
 	public static final String DONORS="donors";
 	public static final String HOME="home";
 	public static final String LIMIT="limit";
+	public static final String ACCESS_DENIED="denied";
 	
 }

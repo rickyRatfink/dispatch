@@ -4,7 +4,7 @@
 <%@ page import="java.util.ArrayList" %>
 
 
-<jsp:include page="includes/header.jsp" flush="true"/>
+<jsp:include page="includes/christmas_header.jsp" flush="true"/>
 
 
 <style type="text/css">
@@ -66,7 +66,7 @@ function submit(action, key) {
 
                                          	<tr>
                                           			<td colspan="2" class="searchFieldResult">
-		                                            	<a href="javascript:submit('ExistingDonor','<bean:write name="list" property="donationId"/>');"><%=i++ %></a>
+		                                            	<font color="#000000"><a href="javascript:submit('ExistingDonor','<bean:write name="list" property="donationId"/>');"><%=i++ %></a></font>
 		                                            </td>
                                             		<td colspan="2" class="searchFieldResult"><bean:write name="list" property="firstname"/>&nbsp;<bean:write name="list" property="lastname"/></td>
 		                                            <td colspan="2" class="searchFieldResult"><bean:write name="list" property="addressLine1"/></td>

@@ -27,7 +27,8 @@
                  <forward name="failure" path="/pages/security/login_error.jsp" redirect="true"/>
                  <forward name="login" path="/pages/security/login.jsp" redirect="true"/>
                  <forward name="logout" path="/pages/security/login.jsp" redirect="true"/>
-                 <forward name="error" path="/pages/error.jsp" redirect="true"/>               
+                 <forward name="error" path="/pages/error.jsp" redirect="true"/>  
+                 <forward name="denied" path="/denied.html" redirect="true"/>              
         </action>
     
     	<action name="ticketForm" path="/Dispatch" type="org.dispatch.faithfarm.struts.action.DonationTicketAction" scope="session" >

@@ -2,7 +2,7 @@
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
   
-<jsp:include page="includes/header.jsp" flush="true"/>
+<jsp:include page="includes/christmas_header.jsp" flush="true"/>
 
 
 <style type="text/css">

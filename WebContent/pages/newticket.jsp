@@ -191,7 +191,7 @@ $(document).ready(function() {
 }
 </style>
 
-<jsp:include page="includes/header.jsp" flush="true"/>
+<jsp:include page="includes/christmas_header.jsp" flush="true"/>
 
 <% 
 	String required = "<img src='"+request.getContextPath()+"/images/required.png' title='required field'/>"; 

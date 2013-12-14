@@ -4,7 +4,7 @@
 <%@ page import="java.util.ArrayList" %>
 
 
-<jsp:include page="includes/header.jsp" flush="true"/>
+<jsp:include page="includes/christmas_header.jsp" flush="true"/>
 
 <script language="javascript" type="text/javascript">
 function ucase(obj) {
@@ -117,7 +117,7 @@ function submit(action, key) {
 		                                         <tr>
 		                                         	<td colspan="2" class="searchFieldResult"><%=i++ %></td>
 		                                            <td colspan="2" class="searchFieldResult">
-		                                            	<a href="javascript:submit('Update','<bean:write name="list" property="donationId"/>');"><bean:write name="list" property="donationId"/></a>
+		                                            	<a href="javascript:submit('Update','<bean:write name="list" property="donationId"/>');"><font color="#000000"><bean:write name="list" property="donationId"/></font></a>
 		                                            	<logic:equal name="loginForm" property="systemUser.userRole" value="Administrator">
 															&nbsp;&nbsp;
 		                                            		<a href="javascript:submit('Delete','<bean:write name="list" property="donationId"/>');"><img src="<%=request.getContextPath() %>/images/DeleteRed.png"/></a>
