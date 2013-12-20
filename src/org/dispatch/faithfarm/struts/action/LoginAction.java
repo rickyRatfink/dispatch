@@ -18,7 +18,7 @@ import org.apache.struts.action.ActionRedirect;
 import org.dispatch.faithfarm.domain.Constants;
 import org.dispatch.faithfarm.domain.ErrorMessage;
 import org.dispatch.faithfarm.domain.SystemUser;
-import org.dispatch.faithfarm.hibernate.dao.SystemUserDao;
+import org.dispatch.faithfarm.hibernate.data.SystemUserDao;
 import org.dispatch.faithfarm.struts.form.LoginForm;
 import org.dispatch.faithfarm.utils.HtmlDropDownBuilder;
 import org.dispatch.faithfarm.utils.Validator;

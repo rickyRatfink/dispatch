@@ -6,14 +6,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -25,16 +23,16 @@ import org.dispatch.faithfarm.domain.DailyLimit;
 import org.dispatch.faithfarm.domain.DonationTicket;
 import org.dispatch.faithfarm.domain.ErrorMessage;
 import org.dispatch.faithfarm.domain.SystemUser;
-import org.dispatch.faithfarm.hibernate.dao.CallLogDao;
-import org.dispatch.faithfarm.hibernate.dao.DailyLimitDao;
-import org.dispatch.faithfarm.hibernate.dao.DonationTicketDao;
+import org.dispatch.faithfarm.hibernate.data.CallLogDao;
+import org.dispatch.faithfarm.hibernate.data.DailyLimitDao;
+import org.dispatch.faithfarm.hibernate.data.DonationTicketDao;
 import org.dispatch.faithfarm.struts.form.DonationTicketForm;
 import org.dispatch.faithfarm.utils.HtmlDropDownBuilder;
 import org.dispatch.faithfarm.utils.Validator;
 
 public class DonationTicketAction extends Action {
 
-	private final static Logger LOGGER = Logger.getLogger(LoginAction.class
+	private final static Logger LOGGER = Logger.getLogger(DonationTicketAction.class
 			.getName());
 	private final static HtmlDropDownBuilder html = new HtmlDropDownBuilder();
 
@@ -48,6 +46,8 @@ public class DonationTicketAction extends Action {
 		SystemUser user = (SystemUser) request.getSession().getAttribute(
 				"USER_" + request.getSession().getId());
 		
+		DonationTicketForm form = (DonationTicketForm) actionForm;
+		
 		if (user==null)
 			return mapping.findForward(Constants.LOGIN);
 		
@@ -59,7 +59,6 @@ public class DonationTicketAction extends Action {
 			return mapping.findForward(Constants.NEW);
 		}
 		else if ("Print All".equals(((DonationTicketForm) actionForm).getAction())) {
-			DonationTicketForm form = (DonationTicketForm) actionForm;
 			
 			List<DonationTicket> printList = new ArrayList<DonationTicket>();
 			for (java.util.Iterator<DonationTicket> iterator =
@@ -72,28 +71,24 @@ public class DonationTicketAction extends Action {
 			return mapping.findForward(Constants.PRINTALL);
 		}
 		else if ("Print".equals(((DonationTicketForm) actionForm).getAction())) {
-			DonationTicketForm form = (DonationTicketForm) actionForm;
 			String callDate=form.getTicket().getCreationDate();
 			form.getTicket().setCreationDate(Validator.convertEpoch(callDate));
 			return mapping.findForward(Constants.PRINT);
 		}
 		else if ("SaveLevel".equals(((DonationTicketForm) actionForm).getAction())) {
-			DonationTicketForm form = (DonationTicketForm) actionForm;
 			DailyLimitDao dao = new DailyLimitDao();
 			form.getLimit().setFarmBase(user.getFarmBase());
 			form.getLimit().setUpdatedBy(user.getUsername());
 			form.getLimit().setUpdatedDate(Validator.getEpoch()+"");
-			dao.addDailyLimit(form.getLimit());
+			dao.save(form.getLimit());
 			return mapping.findForward(Constants.HOME);
 		}
 		else if ("Level".equals(((DonationTicketForm) actionForm).getAction())) {
-			DonationTicketForm form = (DonationTicketForm) actionForm;
 			form.setLimit(new DailyLimit());
 			
 			return mapping.findForward(Constants.LEVEL);
 		}
 		else if ("New".equals(((DonationTicketForm) actionForm).getAction())) {
-			DonationTicketForm form = (DonationTicketForm) actionForm;
 			form.setErrors(new ArrayList<ErrorMessage>());
 			form.setTicket(new DonationTicket());
 			form.getTicket().setFarmBase(user.getFarmBase());
@@ -121,7 +116,7 @@ public class DonationTicketAction extends Action {
 		}
 		else if ("SearchTickets".equals(((DonationTicketForm) actionForm)
 				.getAction())) {
-			((DonationTicketForm) actionForm).setFarmBase(user.getFarmBase());
+			form.setFarmBase(user.getFarmBase());
 			DonationTicketDao dao = new DonationTicketDao();
 			
 			String lastname=((DonationTicketForm) actionForm).getLastname();
@@ -165,7 +160,6 @@ public class DonationTicketAction extends Action {
 				.getAction())) {
 			boolean ok = false;
 			CallLogDao dao = new CallLogDao();
-			DonationTicketForm form = (DonationTicketForm) actionForm;
 			if (this.saveCallLog(form, user, request)) {
 				this.resetForm(form);
 				return mapping.findForward(Constants.NEW);
@@ -182,7 +176,6 @@ public class DonationTicketAction extends Action {
 		} 
 		else if ("Save Ticket".equals(((DonationTicketForm) actionForm)
 				.getAction())) {
-			DonationTicketForm form = (DonationTicketForm) actionForm;
 			form.setFarmBase(user.getFarmBase());
 			boolean ok = this.validate(form, user);
 
@@ -199,7 +192,7 @@ public class DonationTicketAction extends Action {
 				.getAction())) {
 			
 			DonationTicketDao dao = new DonationTicketDao();
-			DonationTicket ticket = dao.findById(new Long(((DonationTicketForm) actionForm).getKey()));
+			DonationTicket ticket = dao.find(new Long(((DonationTicketForm) actionForm).getKey()));
 			this.resetForm((DonationTicketForm) actionForm);
 			((DonationTicketForm) actionForm).setTicket(ticket);
 			((DonationTicketForm) actionForm).setCallDate( Validator.convertEpoch(((DonationTicketForm) actionForm).getTicket().getCreationDate()));
@@ -212,7 +205,7 @@ public class DonationTicketAction extends Action {
 			
 			//delete and reload
 			DonationTicketDao dao = new DonationTicketDao();
-			dao.deleteDonationTicket(new Long(((DonationTicketForm) actionForm).getKey()));
+			dao.delete(new Long(form.getKey()));
 			
 			String lastname=((DonationTicketForm) actionForm).getLastname();
 			String firstname=((DonationTicketForm) actionForm).getFirstname();
@@ -231,7 +224,7 @@ public class DonationTicketAction extends Action {
 			if ("special".equals(special)) special="";
 			  
 			List list = dao.search(firstname, lastname, confirmation, dispatchDate, zipcode, status, special,user.getFarmBase());
-			((DonationTicketForm) actionForm).setResults(list);
+			form.setResults(list);
 			return mapping.findForward(Constants.SEARCH);
 		}
 		else if ("ExistingDonor".equals(((DonationTicketForm) actionForm)
@@ -239,7 +232,7 @@ public class DonationTicketAction extends Action {
 			
 			//retrieve existing ticket and copy name/personal info to new ticket
 			DonationTicketDao dao = new DonationTicketDao();
-			DonationTicket ticket = dao.findById( new Long(((DonationTicketForm) actionForm).getKey()) );
+			DonationTicket ticket = dao.find( new Long(form.getKey()) );
 			
 			DonationTicket newTicket = new DonationTicket();
 			newTicket.setFirstname(ticket.getFirstname());
@@ -285,13 +278,13 @@ public class DonationTicketAction extends Action {
 			DonationTicketDao dao = new DonationTicketDao();
 
 			if (form.getTicket().getDonationId() == null) {
-				long id = dao.addDonationTicket(form.getTicket());
+				long id = dao.save(form.getTicket());
 				request.getSession().setAttribute(
 						"MESSAGE_" + request.getSession().getId(),
 						"Ticket has been successfully saved. Confirmation #"
 								+ id);
 			} else {
-				dao.updateDonationTicket(form.getTicket());
+				dao.update(form.getTicket());
 				request.getSession().setAttribute(
 						"MESSAGE_" + request.getSession().getId(),
 						"Ticket has been successfully updated");
@@ -317,7 +310,7 @@ public class DonationTicketAction extends Action {
 		form.getCallLog().setCallDate(Validator.getEpoch() + "");
 		try {
 			CallLogDao dao = new CallLogDao();
-			long id = dao.addCallLog(form.getCallLog());
+			long id = dao.save(form.getCallLog());
 		} catch (Exception e) {
 			ok = false;
 			request.getSession().setAttribute(
