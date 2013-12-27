@@ -118,6 +118,7 @@
 					<bean:write name="ticketForm" property="ticket.city" />,&nbsp;<bean:write name="ticketForm" property="ticket.state" />&nbsp;<bean:write name="ticketForm" property="ticket.zipcode" />
 					<br/><br/>
 					<b>Contact Phone:</b>&nbsp;<bean:write name="ticketForm" property="ticket.contactPhone" /><br/>
+					<b>Alt. Phone:</b>&nbsp;<bean:write name="ticketForm" property="ticket.phoneOther" /><br/>
 					<b>Email:</b>&nbsp;<bean:write name="ticketForm" property="ticket.emailAddress" /><br/>
 					<br/><br/>
 					
