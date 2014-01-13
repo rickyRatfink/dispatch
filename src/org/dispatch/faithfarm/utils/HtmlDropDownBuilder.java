@@ -112,6 +112,7 @@ public class HtmlDropDownBuilder {
 	        mattress.add(new DropDownItem("full","full"));
 	        mattress.add(new DropDownItem("queen","queen"));
 	        mattress.add(new DropDownItem("king","king"));
+	        mattress.add(new DropDownItem("Mixed Types","Mixed Types"));
 	        
 	        List<DropDownItem> tvsize = new ArrayList<DropDownItem>();
 	        tvsize.add(new DropDownItem("9-inch","9-inch"));

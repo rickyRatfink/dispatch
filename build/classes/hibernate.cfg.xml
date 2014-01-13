@@ -4,14 +4,15 @@
   <session-factory>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/ffarm_prod?autoReconnect=true&amp;zeroDateTimeBehavior=convertToNull</property>
-    <property name="hibernate.connection.username">ffarmapps</property> 
-    <property name="hibernate.connection.password">J35u5isaliv3</property>  
+    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/ffarm_dev?autoReconnect=true&amp;zeroDateTimeBehavior=convertToNull</property>
+    <property name="hibernate.connection.username">root</property> 
+    <property name="hibernate.connection.password">admin</property>  
     <property name="hibernate.c3p0.min_size">10</property>
   	<property name="hibernate.c3p0.max_size">20</property> 
   	<property name="hibernate.c3p0.timeout">0</property>
   	<property name="hibernate.c3p0.max_statements">50</property>
   	<property name="hibernate.c3p0.idle_test_period">3000</property>
+  	<property name="current_session_context_class">managed</property>
     <!-- 
     <property name="hibernate.dbcp.maxIdle">10</property>
     <property name="hibernate.dbcp.maxActive">20</property>

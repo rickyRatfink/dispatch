@@ -32,13 +32,15 @@ public class GenericDao {
 			session = HibernateFactory.openSession();
 			session.beginTransaction();
 			obj = session.get(c, id);
-			session.getTransaction().commit();
 			session.flush();
+			session.getTransaction().commit();
 		} catch (Exception e) {
+			if (session.isOpen())
 			session.getTransaction().rollback();
 			e.printStackTrace();
 			throw new HibernateException(e);
 		} finally {
+			if (session.isOpen())
 			session.close();
 		}
 		return obj;
@@ -51,13 +53,16 @@ public class GenericDao {
 			session = HibernateFactory.openSession();
 			session.beginTransaction();
 			key = (Long) session.save(obj);
-			session.getTransaction().commit();
 			session.flush();
+			session.getTransaction().commit();
+			
 		} catch (HibernateException e) {
+			if (session.isOpen())
 			session.getTransaction().rollback();
 			e.printStackTrace();
 			throw new HibernateException(e);
 		} finally {
+			if (session.isOpen())
 			session.close();
 		}
 		return key;
@@ -68,13 +73,15 @@ public class GenericDao {
 			session = HibernateFactory.openSession();
 			session.beginTransaction();
 			session.update(obj);
-			session.getTransaction().commit();
 			session.flush();
+			session.getTransaction().commit();
 		} catch (HibernateException e) {
+			if (session.isOpen())
 			session.getTransaction().rollback();
 			e.printStackTrace();
 			throw new HibernateException(e);
 		} finally {
+			if (session.isOpen())
 			session.close();
 		}
 	}
@@ -84,13 +91,15 @@ public class GenericDao {
 			session = HibernateFactory.openSession();
 			session.beginTransaction();
 			session.delete(obj);
-			session.getTransaction().commit();
 			session.flush();
+			session.getTransaction().commit();
 		} catch (HibernateException e) {
+			if (session.isOpen())
 			session.getTransaction().rollback();
 			e.printStackTrace();
 			throw new HibernateException(e);
 		} finally {
+			if (session.isOpen())
 			session.close();
 		}
 	}
@@ -102,13 +111,15 @@ public class GenericDao {
 				session.beginTransaction();
 	            Query query = session.createQuery("from " + clazz.getName());
 	            objects = query.list();
-	            session.getTransaction().commit();
-	            session.flush();
+	        	session.flush();
+	        	session.getTransaction().commit();
 	        } catch (HibernateException e) {
+	        	if (session.isOpen())
 	        	session.getTransaction().rollback();
 				e.printStackTrace();
 				throw new HibernateException(e);
 			} finally {
+				if (session.isOpen())
 				session.close();
 			}
 	        return objects;
@@ -122,13 +133,15 @@ public class GenericDao {
 	            Query query = session.createQuery("from " + clazz.getName() + " where farmBase = :farmBase ");
 	            query.setString("farmBase", farm);
 	            objects = query.list();
-	            session.getTransaction().commit();
-	            session.flush();
+	        	session.flush();
+	        	session.getTransaction().commit();
 	        } catch (HibernateException e) {
+	        	if (session.isOpen())
 	        	session.getTransaction().rollback();
 				e.printStackTrace();
 				throw new HibernateException(e);
 			} finally {
+				if (session.isOpen())
 				session.close();
 			}
 	        return objects;
@@ -164,13 +177,15 @@ public class GenericDao {
 					limit = (DailyLimit)list.get(0);
 					dailyLimit=limit.getDailyLimit();
 				}
-				session.getTransaction().commit();
 				session.flush();
+				session.getTransaction().commit();
 			} catch (HibernateException e) {
+				if (session.isOpen())
 				session.getTransaction().rollback();
 				e.printStackTrace();
 				throw new HibernateException(e);
 			} finally {
+				if (session.isOpen())
 				session.close();			
 			}
 			return dailyLimit;
@@ -226,13 +241,15 @@ public class GenericDao {
 				if (farmBase != null && farmBase.length() > 0)
 					q.setString("farmBase", farmBase);
 				list = q.list();
-				session.getTransaction().commit();
 				session.flush();
+				session.getTransaction().commit();
 			} catch (HibernateException e) {
+				if (session.isOpen())
 				session.getTransaction().rollback();
 				e.printStackTrace();
 				throw new HibernateException(e);
 			} finally {
+				if (session.isOpen())
 				session.close();			
 			}
 			return list;
@@ -253,13 +270,15 @@ public class GenericDao {
 				Query q = session.createQuery(query.toString());
 				q.setLong(objectIdName, id);
 				list = q.list();
-				session.getTransaction().commit();
 				session.flush();
+				session.getTransaction().commit();
 			} catch (Exception e) {
+				if (session.isOpen())
 				session.getTransaction().rollback();
 				e.printStackTrace();
 				throw new HibernateException(e);
 			} finally {
+				if (session.isOpen())
 				session.close();
 			}
 			return list;
@@ -277,13 +296,15 @@ public class GenericDao {
 				Query q = session.createQuery(query.toString());
 				q.setLong("intakeId", id);
 				list = q.list();
-				session.getTransaction().commit();
 				session.flush();
+				session.getTransaction().commit();
 			} catch (Exception e) {
+				if (session.isOpen())
 				session.getTransaction().rollback();
 				e.printStackTrace();
 				throw new HibernateException(e);
 			} finally {
+				if (session.isOpen())
 				session.close();
 			}
 			return list;
@@ -303,13 +324,15 @@ public class GenericDao {
 				if (result.size() > 0)
 					user = (SystemUser) result.get(0);
 
-				session.getTransaction().commit();
 				session.flush();
+				session.getTransaction().commit();
 			} catch (Exception e) {
+				if (session.isOpen())
 				session.getTransaction().rollback();
 				e.printStackTrace();
 				throw new HibernateException(e);
 			} finally {
+				if (session.isOpen())
 				session.close();
 			}
 

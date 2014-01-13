@@ -1,5 +1,6 @@
 package org.dispatch.faithfarm.struts.action;
 
+import java.net.InetAddress;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -7,12 +8,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -91,6 +101,7 @@ public class DonationTicketAction extends Action {
 		else if ("New".equals(((DonationTicketForm) actionForm).getAction())) {
 			form.setErrors(new ArrayList<ErrorMessage>());
 			form.setTicket(new DonationTicket());
+			form.getTicket().setStatus("PENDING");
 			form.getTicket().setFarmBase(user.getFarmBase());
 			return mapping.findForward(Constants.NEW);
 		} 
@@ -205,7 +216,8 @@ public class DonationTicketAction extends Action {
 			
 			//delete and reload
 			DonationTicketDao dao = new DonationTicketDao();
-			dao.delete(new Long(form.getKey()));
+			DonationTicket ticket = dao.find(new Long(form.getKey()));
+			dao.delete(ticket);
 			
 			String lastname=((DonationTicketForm) actionForm).getLastname();
 			String firstname=((DonationTicketForm) actionForm).getFirstname();
@@ -283,6 +295,9 @@ public class DonationTicketAction extends Action {
 						"MESSAGE_" + request.getSession().getId(),
 						"Ticket has been successfully saved. Confirmation #"
 								+ id);
+				form.getTicket().setDonationId(id);
+				if (form.getTicket().getEmailAddress()!=null&&form.getTicket().getEmailAddress().length()>0)
+					this.sendEmail(form.getTicket());
 			} else {
 				dao.update(form.getTicket());
 				request.getSession().setAttribute(
@@ -670,6 +685,108 @@ public class DonationTicketAction extends Action {
 			request.getSession().setAttribute("DATE"+(day+1), sDay.substring(0,3)+" "+formattedDate);
 		}
 					
+	}
+	
+	private void sendEmail (DonationTicket ticket) {
+		
+		Properties properties = new Properties();
+		properties.put("mail.smtp.auth", "true");
+		properties.put("mail.smtp.starttls.enable", "true");
+		properties.put("mail.smtp.host", "SMTP1.NTWEBS.NET");//SMTP1.NTWEBS.NET
+		properties.put("mail.smtp.port", "25");//25
+		properties.put("mail.smtp.ssl.trust", "SMTP1.NTWEBS.NET");
+		//properties.put("mail.smtp.host", "smtp.gmail.com");//SMTP1.NTWEBS.NET
+		//properties.put("mail.smtp.port", "587");//25
+
+		Session mailSession = Session.getDefaultInstance(properties,
+				new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication("WebMaster@FaithFarm.org","We9362Ma");// WebMaster@FaithFarm.org , We9362Ma
+						//return new PasswordAuthentication("faithfarm.intake@gmail.com","It0525Ff");// WebMaster@FaithFarm.org , We9362Ma
+					}
+				});
+		try{
+	         // Create a default MimeMessage object.
+	         MimeMessage message = new MimeMessage(mailSession);
+	         //message.setFrom(new InternetAddress("faithfarm.intake@gmail.com","Faith Farm Donations"));
+	         
+	         message.addRecipient(Message.RecipientType.TO,
+                    new InternetAddress("itdepartment@faithfarm.org"));
+	         message.setSubject("Faith Farm Donation Pickup Confirmation#"+ticket.getDonationId());
+	         String phone="";
+	         if ("Fort Lauderdale".equals(ticket.getFarmBase())) {
+	        	 message.setFrom(new InternetAddress("d2@faithfarm.org","Donation Fort Lauderdale"));
+	        	 phone="(954) 763-7787";
+	         }
+	         if ("Boynton Beach".equals(ticket.getFarmBase())) {
+	        	 message.setFrom(new InternetAddress("d3@faithfarm.org","Donation Boynton Beach"));
+	        	 phone="(561) 737-2222";
+	         }
+	         if ("Okeechobee".equals(ticket.getFarmBase())) {
+	        	 message.setFrom(new InternetAddress("d4@faithfarm.org","Donation Okeechobee"));
+	        	 phone="(863) 763-4224";
+	         }
+	         
+	         StringBuffer email = new StringBuffer("");
+	         email.append("Dear "+ WordUtils.capitalize(ticket.getFirstname().toLowerCase())+" "+ WordUtils.capitalize(ticket.getLastname().toLowerCase())+",");
+	         email.append("\rThank you for donating to Faith Farm of "+ticket.getFarmBase()+".\r");
+	         email.append("A donation pickup has been scheduled for "+ticket.getDispatchDate()+" at:\r");
+	         email.append("     "+WordUtils.capitalize(ticket.getAddressLine1().toLowerCase())+"\r");
+	         email.append("     "+WordUtils.capitalize(ticket.getCity().toLowerCase())+", "+ticket.getState()+" "+ticket.getZipcode()+"\n\r");
+	         email.append("Should you need to make changes to or cancel your donation please call "+phone+".\n\r");
+	         email.append("The following items have been scheduled for pickup:\n\r");
+	         email.append("ITEM              QTY\r");
+	         email.append("------------------------------------\r");
+	        if (ticket.getAc()!=null && ticket.getAc().length()>0 ) email.append("Air Conditioner:  "+ticket.getAc()+"\r");
+	        if (ticket.getBedding()!=null && ticket.getBedding().length()>0 ) email.append("Bedding:          "+ticket.getBedding()+" "+ticket.getBeddingQtyType()+"\r");
+	        if (ticket.getBooks()!=null && ticket.getBooks().length()>0 ) email.append("Books:            "+ticket.getBooks()+" "+ticket.getBooksQtyType()+"\r");
+	        if (ticket.getClothing()!=null && ticket.getClothing().length()>0 ) email.append("Clothing:         "+ticket.getClothing()+" "+ticket.getClothingQtyType()+"\r");
+	        if (ticket.getComputer()!=null && ticket.getComputer().length()>0 ) email.append("Computer:         "+ticket.getComputer()+"\r");
+	        if (ticket.getDesk()!=null && ticket.getDesk().length()>0 ) email.append("Desk:             "+ticket.getDesk()+"\r");
+	        if (ticket.getChest()!=null && ticket.getChest().length()>0 ) email.append("Chest:            "+ticket.getChest()+"\r");
+	        if (ticket.getArmoire()!=null && ticket.getArmoire().length()>0 ) email.append("Armoire:          "+ticket.getArmoire()+"\r");
+	        if (ticket.getDresser()!=null && ticket.getDresser().length()>0 ) email.append("Dresser:          "+ticket.getDresser()+"\r");
+	        if (ticket.getMirror()!=null && ticket.getMirror().length()>0 ) email.append("Mirror:           "+ticket.getMirror()+"\r");
+	        if (ticket.getNightstand()!=null && ticket.getNightstand().length()>0 ) email.append("Nighstand:        "+ticket.getNightstand()+"\r");
+	        if (ticket.getHeadboard()!=null && ticket.getHeadboard().length()>0 ) email.append("Headboard:        "+ticket.getHeadboard()+"\r");
+	        if (ticket.getFootboard()!=null && ticket.getFootboard().length()>0 ) email.append("Footboard:        "+ticket.getFootboard()+"\r");
+	        if (ticket.getRails()!=null && ticket.getRails().length()>0 ) email.append("Rails:            "+ticket.getRails()+"\r");
+	        if (ticket.getLamp()!=null && ticket.getLamp().length()>0 ) email.append("Lamp:             "+ticket.getLamp()+"\r");
+	        if (ticket.getLawnFurniture()!=null && ticket.getLawnFurniture().length()>0 ) email.append("Lawn Furniture:   "+ticket.getLawnFurniture()+"\r");
+	        if (ticket.getMattress()!=null && ticket.getMattress().length()>0 ) email.append("Mattress:         "+ticket.getMattress()+" "+ticket.getMattressQtySize()+"\r");
+	        if (ticket.getMiscHouseholdItems()!=null && ticket.getMiscHouseholdItems().length()>0 ) email.append("Misc. House Items:"+" "+ticket.getMiscHouseholdItems()+ticket.getMiscHouseholdItemQtySize()+"\r");
+	        if (ticket.getRefridgerator()!=null && ticket.getRefridgerator().length()>0 ) email.append("Refrigerator:     "+ticket.getRefridgerator()+"\r");
+	        if (ticket.getStove()!=null && ticket.getStove().length()>0 ) email.append("Stove:            "+ticket.getStove()+"\r");
+	        if (ticket.getRecliner()!=null && ticket.getRecliner().length()>0 ) email.append("Recliner:         "+ticket.getRecliner()+"\r");
+	        if (ticket.getSofa()!=null && ticket.getSofa().length()>0 ) email.append("Sofa:             "+ticket.getSofa()+"\r");
+	        if (ticket.getLoveseat()!=null && ticket.getLoveseat().length()>0 ) email.append("Loveseat:         "+ticket.getLoveseat()+"\r");
+	        if (ticket.getWallUnit()!=null && ticket.getWallUnit().length()>0 ) email.append("Wall Unit:        "+ticket.getWallUnit()+" "+ticket.getWallUnitQtySize()+"\r");
+	        if (ticket.getTables()!=null && ticket.getTables().length()>0 ) email.append("Table:            "+ticket.getTables()+" "+ticket.getTableType()+"\r");
+	        if (ticket.getChair()!=null && ticket.getChair().length()>0 ) email.append("Chair:            "+ticket.getChair()+ticket.getChairType()+"\r");
+	        if (ticket.getTelevision()!=null && ticket.getTelevision().length()>0 ) email.append("Television:       "+ticket.getTelevision()+" "+ticket.getTelevisionSize()+"\r");
+	        if (ticket.getElectronics()!=null && ticket.getElectronics().length()>0 ) email.append("Electronics:      "+ticket.getElectronics()+"\r");
+	        if (ticket.getWasher()!=null && ticket.getWasher().length()>0 ) email.append("Washer:           "+ticket.getWasher()+"\r");
+	    	if (ticket.getDryer()!=null && ticket.getDryer().length()>0 ) email.append("Dryer:            "+ticket.getDryer()+"\r");
+	    	if (ticket.getExerciseEquipment()!=null && ticket.getExerciseEquipment().length()>0 ) email.append("Exercise Equip.   "+ticket.getExerciseEquipment()+"\r");
+	        
+	    	email.append("\n\rAgain, we thank you for your donation!");
+	    	email.append("\n\n\n\rTHIS IS AN AUTOMATED MESSAGE. DO NOT REPLY.");
+		        
+	        message.setText(email.toString());
+	         // Send message
+		         try {
+		     		String ipAddy=InetAddress.getLocalHost().getHostAddress();
+		     		if ("50.63.180.165".equals(ipAddy))
+		     				Transport.send(message);
+		     			
+		     		} catch (Exception e) {
+		     			LOGGER.log(Level.SEVERE,"Error occurred in getting IP when trying to send email: "+e.getMessage());
+		     		}
+		         
+		        }catch (Exception mex) {
+		         mex.printStackTrace();
+		         LOGGER.log(Level.SEVERE,"Error occurred sending email for application: "+mex.getMessage());
+		      }
 	}
 
 }

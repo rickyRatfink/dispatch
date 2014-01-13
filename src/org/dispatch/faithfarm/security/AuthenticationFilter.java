@@ -33,6 +33,7 @@ public class AuthenticationFilter implements Filter {
 		String ip=request.getRemoteAddr().toString();
 		if (!"75.147.217.62".equals(ip) && //Boynton Beach Farm
 				!"70.89.102.41".equals(ip) && //FTL Farm
+				!"75.149.244.9".equals(ip) && //BYN CORP
 				!"127.0.0.1".equals(ip)  ) {
 			LOGGER.log(Level.SEVERE,"INVALID IP ADDRESS TRIED TO ACCESS THE SYSTEM: "+request.getRemoteAddr().toString());
 			response.sendRedirect(contextPath + "/denied.html");

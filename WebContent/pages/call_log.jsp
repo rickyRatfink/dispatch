@@ -3,7 +3,7 @@
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
 
 
-<jsp:include page="includes/christmas_header.jsp" flush="true"/>
+<jsp:include page="includes/header.jsp" flush="true"/>
 
 <% 
 	String required = "<img src='../images/required.png'/>"; 

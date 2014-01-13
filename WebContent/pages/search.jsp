@@ -4,7 +4,7 @@
 <%@ page import="java.util.ArrayList" %>
 
 
-<jsp:include page="includes/christmas_header.jsp" flush="true"/>
+<jsp:include page="includes/header.jsp" flush="true"/>
 
 <script language="javascript" type="text/javascript">
 function ucase(obj) {
@@ -16,6 +16,15 @@ function submit(action, key) {
 	document.getElementById("action").value=action;
 	document.getElementById("key").value=key;
 	document.getElementById("form1").submit();
+}
+
+function isNumberKey(evt)
+{
+   var charCode = (evt.which) ? evt.which : event.keyCode
+   if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+
+   return true;
 }
 </script>
 
@@ -71,8 +80,8 @@ function submit(action, key) {
                             	<td height="23" valign="center" background="images/searchGroupBk.png" class="searchMenuHeader">
                                 		<html:text property="lastname" size="25" maxlength="20"  styleClass="textboxSearch" onfocus="javascript:this.value='';" onkeyup="ucase(this)"/>
                                         <html:text property="firstname" size="20" maxlength="20"  styleClass="textboxSearch" onfocus="javascript:this.value='';" onkeyup="ucase(this)"/>
-                                        <html:text property="zipcode" size="10" maxlength="10"  styleClass="textboxSearch" onfocus="javascript:this.value='';" onkeyup="ucase(this)"/>
-                                        <html:text property="confirmation" size="15" maxlength="15"  styleClass="textboxSearch" onfocus="javascript:this.value='';" onkeyup="ucase(this)"/> 
+                                        <html:text property="zipcode" size="10" maxlength="10"  styleClass="textboxSearch" onfocus="javascript:this.value='';" onkeypress="return isNumberKey(event)" />
+                                        <html:text property="confirmation" size="15" maxlength="15"  styleClass="textboxSearch" onfocus="javascript:this.value='';" onkeypress="return isNumberKey(event)" /> 
                                         <html:text property="dispatchDate" size="30" maxlength="10"  styleClass="tcal" onfocus="javascript:this.value='';" onkeyup="ucase(this)"/>
                                     
                                    <html:select property="status" styleClass="ddlSearch" >

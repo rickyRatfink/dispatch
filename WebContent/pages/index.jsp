@@ -1,4 +1,4 @@
-<jsp:include page="includes/christmas_header.jsp" flush="true"/>
+<jsp:include page="includes/header.jsp" flush="true"/>
  
 <tr>
  			<td bgcolor="#ffffff" align="center"><br /><br />

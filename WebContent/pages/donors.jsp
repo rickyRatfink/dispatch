@@ -4,7 +4,7 @@
 <%@ page import="java.util.ArrayList" %>
 
 
-<jsp:include page="includes/christmas_header.jsp" flush="true"/>
+<jsp:include page="includes/header.jsp" flush="true"/>
 
 
 <style type="text/css">
