@@ -296,7 +296,7 @@ public class DonationTicketAction extends Action {
 						"Ticket has been successfully saved. Confirmation #"
 								+ id);
 				form.getTicket().setDonationId(id);
-				if (form.getTicket().getEmailAddress()!=null&&form.getTicket().getEmailAddress().length()>0)
+				if (form.getTicket().getEmailAddress()!=null&&form.getTicket().getEmailAddress().length()>10&&form.getTicket().getEmailAddress().contains("@"))
 					this.sendEmail(form.getTicket());
 			} else {
 				dao.update(form.getTicket());
@@ -692,17 +692,17 @@ public class DonationTicketAction extends Action {
 		Properties properties = new Properties();
 		properties.put("mail.smtp.auth", "true");
 		properties.put("mail.smtp.starttls.enable", "true");
-		properties.put("mail.smtp.host", "SMTP1.NTWEBS.NET");//SMTP1.NTWEBS.NET
-		properties.put("mail.smtp.port", "25");//25
-		properties.put("mail.smtp.ssl.trust", "SMTP1.NTWEBS.NET");
-		//properties.put("mail.smtp.host", "smtp.gmail.com");//SMTP1.NTWEBS.NET
-		//properties.put("mail.smtp.port", "587");//25
+		//properties.put("mail.smtp.host", "SMTP1.NTWEBS.NET");//SMTP1.NTWEBS.NET
+		//properties.put("mail.smtp.port", "25");//25
+		//properties.put("mail.smtp.ssl.trust", "SMTP1.NTWEBS.NET");
+		properties.put("mail.smtp.host", "smtp.gmail.com");//SMTP1.NTWEBS.NET
+		properties.put("mail.smtp.port", "587");//25
 
 		Session mailSession = Session.getDefaultInstance(properties,
 				new javax.mail.Authenticator() {
 					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication("WebMaster@FaithFarm.org","We9362Ma");// WebMaster@FaithFarm.org , We9362Ma
-						//return new PasswordAuthentication("faithfarm.intake@gmail.com","It0525Ff");// WebMaster@FaithFarm.org , We9362Ma
+						//return new PasswordAuthentication("WebMaster@FaithFarm.org","We9362Ma");// WebMaster@FaithFarm.org , We9362Ma
+						return new PasswordAuthentication("faithfarm.intake@gmail.com","It0525Ff");// WebMaster@FaithFarm.org , We9362Ma
 					}
 				});
 		try{
@@ -711,7 +711,7 @@ public class DonationTicketAction extends Action {
 	         //message.setFrom(new InternetAddress("faithfarm.intake@gmail.com","Faith Farm Donations"));
 	         
 	         message.addRecipient(Message.RecipientType.TO,
-                    new InternetAddress("itdepartment@faithfarm.org"));
+                    new InternetAddress(ticket.getEmailAddress(),ticket.getEmailAddress()));
 	         message.setSubject("Faith Farm Donation Pickup Confirmation#"+ticket.getDonationId());
 	         String phone="";
 	         if ("Fort Lauderdale".equals(ticket.getFarmBase())) {
@@ -733,7 +733,7 @@ public class DonationTicketAction extends Action {
 	         email.append("A donation pickup has been scheduled for "+ticket.getDispatchDate()+" at:\r");
 	         email.append("     "+WordUtils.capitalize(ticket.getAddressLine1().toLowerCase())+"\r");
 	         email.append("     "+WordUtils.capitalize(ticket.getCity().toLowerCase())+", "+ticket.getState()+" "+ticket.getZipcode()+"\n\r");
-	         email.append("Should you need to make changes to or cancel your donation please call "+phone+".\n\r");
+	         email.append("Should you need to make changes or cancel your donation please call "+phone+".\n\r");
 	         email.append("The following items have been scheduled for pickup:\n\r");
 	         email.append("ITEM              QTY\r");
 	         email.append("------------------------------------\r");
