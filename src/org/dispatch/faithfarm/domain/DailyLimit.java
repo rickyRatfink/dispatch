@@ -9,7 +9,8 @@ public class DailyLimit implements java.io.Serializable {
 
 	private Long dailyLimitId;
 	private String dispatchDate;
-	private int dailyLimit;
+	private int dailyLimit=0;
+	private int specialLimit=0;
 	private String updatedBy;
 	private String updatedDate;
 	private String farmBase;
@@ -17,10 +18,11 @@ public class DailyLimit implements java.io.Serializable {
 	public DailyLimit() {
 	}
 
-	public DailyLimit(String dispatchDate, int dailyLimit, String updatedBy,
+	public DailyLimit(String dispatchDate, int dailyLimit, int specialLimit, String updatedBy,
 			String updatedDate, String farmBase) {
 		this.dispatchDate = dispatchDate;
 		this.dailyLimit = dailyLimit;
+		this.specialLimit = specialLimit;
 		this.updatedBy = updatedBy;
 		this.updatedDate = updatedDate;
 		this.farmBase = farmBase;
@@ -73,5 +75,14 @@ public class DailyLimit implements java.io.Serializable {
 	public void setFarmBase(String farmBase) {
 		this.farmBase = farmBase;
 	}
+
+	public int getSpecialLimit() {
+		return specialLimit;
+	}
+
+	public void setSpecialLimit(int specialLimit) {
+		this.specialLimit = specialLimit;
+	}
+	
 
 }

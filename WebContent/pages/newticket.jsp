@@ -434,13 +434,11 @@ function submit(action) {
                             	<td>
                                     <logic:equal name="ticketForm" property="ticket.status" value="PENDING">
 	   					                <html:select property="ticket.status" styleClass="ddl" onchange="javascript:confirm('Confirm Cancellation?');">
-											<html:option value="">Select</html:option>
 											<html:optionsCollection name="dllStatus" value="value" label="label"  />
 										</html:select>
 									</logic:equal>
                                     <logic:notEqual name="ticketForm"  property="ticket.status" value="PENDING">
 	   					                <html:select property="ticket.status" styleClass="ddl" >
-											<html:option value="">Select</html:option>
 											<html:optionsCollection name="dllStatus" value="value" label="label"  />
 										</html:select>
 									</logic:notEqual>

@@ -19,8 +19,7 @@ public class GenericDao {
 	private static SessionFactory factory;
 	private final static Logger LOGGER = Logger.getLogger(SessionFactory.class
 			.getName());
-	private static Session session;
-
+	
 	public GenericDao() {
 		LOGGER.setLevel(Level.SEVERE);		
 	}
@@ -28,19 +27,18 @@ public class GenericDao {
 	
 	public Object findById(Class c,Long id) {
 		Object obj=null;
+		Session session=null;
 		try {
 			session = HibernateFactory.openSession();
 			session.beginTransaction();
 			obj = session.get(c, id);
 			session.flush();
 			session.getTransaction().commit();
-		} catch (Exception e) {
-			if (session.isOpen())
+		} catch (Exception e) {		
 			session.getTransaction().rollback();
 			e.printStackTrace();
 			throw new HibernateException(e);
 		} finally {
-			if (session.isOpen())
 			session.close();
 		}
 		return obj;
@@ -49,6 +47,7 @@ public class GenericDao {
 	
 	public Long save(Object obj) {
 		Long key = null;
+		Session session=null;
 		try {
 			session = HibernateFactory.openSession();
 			session.beginTransaction();
@@ -56,55 +55,55 @@ public class GenericDao {
 			session.flush();
 			session.getTransaction().commit();
 			
-		} catch (HibernateException e) {
-			if (session.isOpen())
+		} catch (HibernateException e) {			
 			session.getTransaction().rollback();
 			e.printStackTrace();
 			throw new HibernateException(e);
-		} finally {
-			if (session.isOpen())
+		} finally {			
 			session.close();
 		}
 		return key;
 	}
 	
 	public void update(Object obj) {
+		Session session=null;
+
 		try {
 			session = HibernateFactory.openSession();
 			session.beginTransaction();
 			session.update(obj);
 			session.flush();
 			session.getTransaction().commit();
-		} catch (HibernateException e) {
-			if (session.isOpen())
+		} catch (HibernateException e) {			
 			session.getTransaction().rollback();
 			e.printStackTrace();
 			throw new HibernateException(e);
-		} finally {
-			if (session.isOpen())
+		} finally {			
 			session.close();
 		}
 	}
 	
 	public void delete(Object obj) {
+		Session session=null;
+
 		try {
 			session = HibernateFactory.openSession();
 			session.beginTransaction();
 			session.delete(obj);
 			session.flush();
 			session.getTransaction().commit();
-		} catch (HibernateException e) {
-			if (session.isOpen())
+		} catch (HibernateException e) {			
 			session.getTransaction().rollback();
 			e.printStackTrace();
 			throw new HibernateException(e);
-		} finally {
-			if (session.isOpen())
+		} finally {			
 			session.close();
 		}
 	}
 	
 	 protected List findAll(Class clazz) {
+			Session session=null;
+
 	        List objects = null;
 	        try {
 	        	session = HibernateFactory.openSession();
@@ -113,19 +112,18 @@ public class GenericDao {
 	            objects = query.list();
 	        	session.flush();
 	        	session.getTransaction().commit();
-	        } catch (HibernateException e) {
-	        	if (session.isOpen())
+	        } catch (HibernateException e) {	        	
 	        	session.getTransaction().rollback();
 				e.printStackTrace();
 				throw new HibernateException(e);
-			} finally {
-				if (session.isOpen())
+			} finally {				
 				session.close();
 			}
 	        return objects;
 	    }
 	 
 	 protected List findAllByFarm(Class clazz, String farm) {
+			Session session=null;
 	        List objects = null;
 	        try {
 	        	session = HibernateFactory.openSession();
@@ -135,20 +133,19 @@ public class GenericDao {
 	            objects = query.list();
 	        	session.flush();
 	        	session.getTransaction().commit();
-	        } catch (HibernateException e) {
-	        	if (session.isOpen())
+	        } catch (HibernateException e) {	        	
 	        	session.getTransaction().rollback();
 				e.printStackTrace();
 				throw new HibernateException(e);
-			} finally {
-				if (session.isOpen())
+			} finally {				
 				session.close();
 			}
 	        return objects;
 	    }
 	 
-		public int search(String dispatchDate, String farmBase ) {
+		public DailyLimit search(String dispatchDate, String farmBase ) {
 
+			Session session=null;
 			StringBuffer query = new StringBuffer("from DailyLimit where 1=1 ");
 			long dailyLimitId=0;
 			if (dispatchDate != null && dispatchDate.length() > 0)
@@ -175,24 +172,23 @@ public class GenericDao {
 				
 				if (list.size()>0) {
 					limit = (DailyLimit)list.get(0);
-					dailyLimit=limit.getDailyLimit();
+					//dailyLimit=limit.getDailyLimit();
 				}
 				session.flush();
 				session.getTransaction().commit();
-			} catch (HibernateException e) {
-				if (session.isOpen())
+			} catch (HibernateException e) {				
 				session.getTransaction().rollback();
 				e.printStackTrace();
 				throw new HibernateException(e);
-			} finally {
-				if (session.isOpen())
+			} finally {				
 				session.close();			
 			}
-			return dailyLimit;
+			return limit;
 		}
 	 
 	 public List search(String firstname,String lastname, String confirmation, String dispatchDate, String zipcode, String status, String special, String farmBase ) {
 
+			Session session=null;
 			StringBuffer query = new StringBuffer("from DonationTicket where 1=1 ");
 			long donationId=0;
 			List list = null;
@@ -243,13 +239,11 @@ public class GenericDao {
 				list = q.list();
 				session.flush();
 				session.getTransaction().commit();
-			} catch (HibernateException e) {
-				if (session.isOpen())
+			} catch (HibernateException e) {				
 				session.getTransaction().rollback();
 				e.printStackTrace();
 				throw new HibernateException(e);
-			} finally {
-				if (session.isOpen())
+			} finally {				
 				session.close();			
 			}
 			return list;
@@ -261,6 +255,7 @@ public class GenericDao {
 		public List findByObjectId(Class c, String objectIdName, Long id) {
 
 			LOGGER.setLevel(Level.INFO);
+			Session session=null;
 			List<Object> list = new ArrayList<Object>();
 			try {
 				session = HibernateFactory.openSession();
@@ -272,13 +267,11 @@ public class GenericDao {
 				list = q.list();
 				session.flush();
 				session.getTransaction().commit();
-			} catch (Exception e) {
-				if (session.isOpen())
+			} catch (Exception e) {				
 				session.getTransaction().rollback();
 				e.printStackTrace();
 				throw new HibernateException(e);
-			} finally {
-				if (session.isOpen())
+			} finally {				
 				session.close();
 			}
 			return list;
@@ -287,6 +280,7 @@ public class GenericDao {
 		public List findByIntakeId(Class c, Long id) {
 
 			LOGGER.setLevel(Level.INFO);
+			Session session=null;
 			List<Object> list = new ArrayList<Object>();
 			try {
 				session = HibernateFactory.openSession();
@@ -298,13 +292,11 @@ public class GenericDao {
 				list = q.list();
 				session.flush();
 				session.getTransaction().commit();
-			} catch (Exception e) {
-				if (session.isOpen())
+			} catch (Exception e) {				
 				session.getTransaction().rollback();
 				e.printStackTrace();
 				throw new HibernateException(e);
-			} finally {
-				if (session.isOpen())
+			} finally {				
 				session.close();
 			}
 			return list;
@@ -312,6 +304,7 @@ public class GenericDao {
 		
 		public SystemUser authenticate(String username, String password) {
 			SystemUser user=null;
+			Session session=null;
 			try {
 				session = HibernateFactory.openSession();
 				session.beginTransaction();
@@ -326,13 +319,11 @@ public class GenericDao {
 
 				session.flush();
 				session.getTransaction().commit();
-			} catch (Exception e) {
-				if (session.isOpen())
+			} catch (Exception e) {				
 				session.getTransaction().rollback();
 				e.printStackTrace();
 				throw new HibernateException(e);
-			} finally {
-				if (session.isOpen())
+			} finally {				
 				session.close();
 			}
 

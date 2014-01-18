@@ -43,7 +43,8 @@
                         	<tr>
                             	<td width="25"></td>
                             	<td class="fieldHeading" >Pickup Date<%=required%></td> 
-                                <td class="fieldHeading" >Limit<%=required%></td>
+                                <td class="fieldHeading" >Regular Limit<%=required%></td>
+                                <td class="fieldHeading" >Special Limit<%=required%></td>
                                 <td></td>
                             </tr>
                             <tr>
@@ -53,6 +54,9 @@
                                 </td>
                             	<td >
                                 	<html:text property="limit.dailyLimit" size="3" maxlength="3" styleClass="textbox1"  />
+                                </td> 
+                                <td >
+                                	<html:text property="limit.specialLimit" size="3" maxlength="3" styleClass="textbox1"  />
                                 </td> 
                                 
                                 <td></td>

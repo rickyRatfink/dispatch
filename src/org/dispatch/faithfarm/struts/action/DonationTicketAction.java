@@ -543,18 +543,38 @@ public class DonationTicketAction extends Action {
 			Date now = calendar.getTime(); 
 			DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 			DateFormat df2 = new SimpleDateFormat("EEEE");
-			int limit = limitDao.search(form.getTicket().getDispatchDate(),user.getFarmBase());
+			DailyLimit dailyLimit = limitDao.search(form.getTicket().getDispatchDate(),user.getFarmBase());
 			
-			//default to 65 if limit hasn't been set
+			int limit=dailyLimit.getDailyLimit();
+			int special=dailyLimit.getSpecialLimit();
+			
+			//default regular limit to 65 if limit hasn't been set
 			if (limit==0)
 				limit=65;
-				
-			List list = donationDao.search(null, null, null, form.getTicket().getDispatchDate(), null, null, null, user.getFarmBase());
-			if (list.size()>=limit) {
-				String msg = "Ticket limit for "+form.getTicket().getDispatchDate()+" has been reached at "+user.getFarmBase()+".  Please select another date";
-				if (msg!=null) {
-					errors.add(new ErrorMessage("",msg));
-					ok=false;
+			
+			//default regular limit to 4 if limit hasn't been set
+			if (special==0)
+				special=4;
+			
+			if ("NO".equals(form.getTicket().getSpecialFlag())) {
+				List list = donationDao.search(null, null, null, form.getTicket().getDispatchDate(), null, null, "NO", user.getFarmBase());
+				if (list.size()>=limit) {
+					String msg = "Ticket limit for "+form.getTicket().getDispatchDate()+" has been reached at "+user.getFarmBase()+".  Please select another date";
+					if (msg!=null) {
+						errors.add(new ErrorMessage("",msg));
+						ok=false;
+					}
+				}
+			}
+			
+			if ("YES".equals(form.getTicket().getSpecialFlag())) {
+				List specials = donationDao.search(null, null, null, form.getTicket().getDispatchDate(), null, null, "YES", user.getFarmBase());
+				if (specials.size()>=special) {
+					String msg = "Ticket limit for specials on "+form.getTicket().getDispatchDate()+" has been reached at "+user.getFarmBase()+".  Please select another date";
+					if (msg!=null) {
+						errors.add(new ErrorMessage("",msg));
+						ok=false;
+					}
 				}
 			}
 		}
@@ -659,7 +679,9 @@ public class DonationTicketAction extends Action {
 		Date now = calendar.getTime();
 		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		DateFormat df2 = new SimpleDateFormat("EEEE");
-		int limit = limitDao.search(df.format(now), user.getFarmBase());
+		DailyLimit dailyLimit = limitDao.search(df.format(now), user.getFarmBase());
+		int limit=dailyLimit.getDailyLimit();
+		
 		List list1 = donationDao.search(null, null, null, df.format(now), null, "Reschedule", null, user.getFarmBase());
 		List list2 = donationDao.search(null, null, null,  df.format(now), null, "Pending", null, user.getFarmBase());
 		int count = list1.size()+list2.size();
@@ -675,7 +697,8 @@ public class DonationTicketAction extends Action {
 			String formattedDate = df.format(tomorrow);
 			String sDay = df2.format(tomorrow);
 			
-			limit = limitDao.search(formattedDate, user.getFarmBase());
+			DailyLimit dLimit = limitDao.search(formattedDate, user.getFarmBase());
+			limit = dLimit.getDailyLimit();
 			list1 = donationDao.search(null, null, null, formattedDate, null, "Reschedule", null, user.getFarmBase());
 			list2 = donationDao.search(null, null, null,  formattedDate, null, "Pending", null, user.getFarmBase());
 			count = list1.size()+list2.size();

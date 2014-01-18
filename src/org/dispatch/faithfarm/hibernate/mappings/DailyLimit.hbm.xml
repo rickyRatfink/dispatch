@@ -14,6 +14,9 @@
         <property name="dailyLimit" type="int">
             <column name="DAILY_LIMIT" not-null="true" />
         </property>
+        <property name="specialLimit" type="int">
+            <column name="SPECIAL_LIMIT" not-null="true" />
+        </property>
         <property name="updatedBy" type="string">
             <column name="UPDATED_BY" length="45" not-null="true" />
         </property>
